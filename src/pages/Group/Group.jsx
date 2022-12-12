@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button'
 import "./groupstyle.css"
 import { IconButton, TextField } from "@mui/material";
@@ -12,10 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
+import axios from 'axios'
 
 function Group() {
     const [count, setCount] = useState(0);
@@ -26,41 +23,65 @@ function Group() {
         let content = [];
         for (let i = 0; i < 6; i++) {
             content.push(
-                <Accordion className="expander">
-                    <AccordionSummary>
-                    <div className="dayWeekContainer">
+                <div className="buttonDayWeekContainer">
+                    <button type="button" onClick={expander} className="dayWeekContainer">
+                        <div>
+
+                        </div>
+                        <div>
+                            <div>
+                                <p>05</p>
+                                <span>декабрь</span>
+                            </div>
                             <div>
 
                             </div>
                             <div>
-                                <div>
-                                    <p>05</p>
-                                    <span>декабрь</span>
-                                </div>
-                                <div>
-
-                                </div>
-                                <div>
-                                    Понедельник
-                                </div>
+                                Понедельник
                             </div>
                         </div>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <div>ss</div>
-                    </AccordionDetails>
-                </Accordion>
+                    </button>
+                    <div className="dayWeekContent">
+                        <div></div>
+                        <div>
+                            <div></div>
+                            <div>
+
+                            </div>
+                            <div className="intoDayWeekContent">
+                                <p>
+                                    SHEDULE
+                                </p>
+                                {getLessonBlock()}
+                                {getLessonBlock()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             );
         }
         return content;
     };
+
+    const getLessonBlock = () => {
+        return (
+            <div>
+                <p></p>
+                <p>
+                    ЧКР
+                </p>
+                <p>08:30-09:15</p>
+            </div>);
+    }
+
     const iconStyle = { fontSize: 45 }
+
     return (
         <div className="main">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
-                    <IconButton aria-aria-label="cabinetsButton">
+                    <IconButton>
                         <DoorBackOutlined style={iconStyle} />
                     </IconButton>
                     <IconButton>
@@ -71,11 +92,7 @@ function Group() {
                     <span>
                         .NEDIFAR
                     </span>
-                    <Select variant="standard" value="1" IconComponent={null} className="groupSelect">
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
+                    <GroupSelect />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton classsName="settingsButton">
@@ -124,5 +141,48 @@ function Group() {
         </div>
     );
 }
+
+function expander(e) {
+    e.currentTarget.classList.toggle("active");
+    var content = e.currentTarget.nextElementSibling;
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+    } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+    }
+}
+
+class GroupSelect extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { list: [""] };
+    }
+    componentDidMount() {
+        axios.get("http://192.168.147.51:81/api/lastdance/getgrouplist").then((response) => {
+            if (response.status === 200) {
+                this.setState({ list: response.data });
+            }
+        }).catch(err => {
+            console.log("err")
+        })
+    }
+
+    selectItem() {
+        let listMenuItems = []
+        this.state.list.forEach(element => {
+            listMenuItems.push(<MenuItem>{element}</MenuItem>);
+        });
+        return listMenuItems;
+    }
+    render() {
+        return (
+            <Select variant="standard" value="1" IconComponent={null} className="groupSelect" >
+
+                {this.selectItem()}
+            </Select>
+        );
+    }
+}
+
 
 export default Group;
