@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button'
 import "./groupstyle.css"
 import { IconButton, TextField } from "@mui/material";
-import { DoorBackOutlined, Sledding } from "@mui/icons-material";
+import { DoorBackOutlined, SettingsAccessibility, Sledding } from "@mui/icons-material";
 import NewReleases from "@mui/icons-material/NewReleasesOutlined";
 import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
@@ -18,12 +18,17 @@ function Group() {
     const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs('2022-04-07'));
     const [locale, setLocale] = useState('ru');
+    const [spisok, setSpisok] = useState([]);
 
-    const getWeekBlocks = () => {
+    const handleGroupChange = (dayWeeks) => {
+        setSpisok(getWeekBlocks(dayWeeks));
+    }
+
+    const getWeekBlocks = (dayWeeks) => {
         let content = [];
-        for (let i = 0; i < 6; i++) {
+        dayWeeks.forEach(element => {
             content.push(
-                <div className="buttonDayWeekContainer">
+                <div className="buttonDayWeekContainer" key={element.dayWeekName}>
                     <button type="button" onClick={expander} className="dayWeekContainer">
                         <div>
 
@@ -37,7 +42,7 @@ function Group() {
 
                             </div>
                             <div>
-                                Понедельник
+                                {element.dayWeekName}
                             </div>
                         </div>
                     </button>
@@ -52,27 +57,31 @@ function Group() {
                                 <p>
                                     SHEDULE
                                 </p>
-                                {getLessonBlock()}
-                                {getLessonBlock()}
+                                {getLessonBlock(element.dayWeekClasses)}
                             </div>
                         </div>
                     </div>
                 </div>
 
             );
-        }
+        });
         return content;
     };
 
-    const getLessonBlock = () => {
-        return (
-            <div>
-                <p></p>
-                <p>
-                    ЧКР
-                </p>
-                <p>08:30-09:15</p>
-            </div>);
+    const getLessonBlock = (lessons) => {
+        let lessonBlocks = [];
+        lessons.forEach(element => {
+            lessonBlocks.push(
+                <div>
+                    <p>{element.number}</p>
+                    <p>08:30-09:15</p>
+                    <p>
+                        {element.decipline}
+                    </p>
+                </div>);
+        });
+        return lessonBlocks;
+        
     }
 
     const iconStyle = { fontSize: 45 }
@@ -92,10 +101,10 @@ function Group() {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect />
+                    <GroupSelect handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton classsName="settingsButton">
+                    <IconButton className="settingsButton">
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -136,14 +145,13 @@ function Group() {
             </div>
             <div className="shedule">
                 <p>LastDance</p>
-                {getWeekBlocks()}
+                {spisok}
             </div>
         </div>
     );
 }
 
 function expander(e) {
-    e.currentTarget.classList.toggle("active");
     var content = e.currentTarget.nextElementSibling;
     if (content.style.maxHeight) {
         content.style.maxHeight = null;
@@ -155,8 +163,12 @@ function expander(e) {
 class GroupSelect extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { list: [""] };
+        this.state = {
+            list: [""],
+            group: ""
+        };
     }
+
     componentDidMount() {
         axios.get("http://192.168.147.51:81/api/lastdance/getgrouplist").then((response) => {
             if (response.status === 200) {
@@ -167,17 +179,30 @@ class GroupSelect extends React.Component {
         })
     }
 
+    handleChange = (e) => {
+        this.setState({ group: e.target.value })
+        axios.get(`http://192.168.147.51:81/api/lastdance/getgroup/${e.target.value}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log(response.data);
+                    this.props.handleGroupChange(response.data);
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+
+    }
+
     selectItem() {
         let listMenuItems = []
         this.state.list.forEach(element => {
-            listMenuItems.push(<MenuItem>{element}</MenuItem>);
+            listMenuItems.push(<MenuItem value={element} key={element}>{element}</MenuItem>);
         });
         return listMenuItems;
     }
     render() {
         return (
-            <Select variant="standard" value="1" IconComponent={null} className="groupSelect" >
-
+            <Select variant="standard" value={this.group} onChange={this.handleChange} IconComponent={undefined} className="groupSelect" >
                 {this.selectItem()}
             </Select>
         );

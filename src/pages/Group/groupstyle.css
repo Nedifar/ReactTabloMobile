@@ -125,6 +125,7 @@
     font-size: 200%;
     color: white;
     display: block;
+    
 }
 
 .headerCenterBlock>div>div:focus {
@@ -139,6 +140,7 @@
     width: 60%;
     height: 30%;
     background-color: transparent !important;
+    text-align: start;
 }
 
 .shedule {
