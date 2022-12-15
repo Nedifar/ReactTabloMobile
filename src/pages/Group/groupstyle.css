@@ -125,7 +125,7 @@
     font-size: 200%;
     color: white;
     display: block;
-    
+
 }
 
 .headerCenterBlock>div>div:focus {
@@ -157,6 +157,7 @@
 .shedule {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    position: relative;
 }
 
 .shedule>p {
@@ -183,7 +184,7 @@
 
 .dayWeekContainer>div:first-of-type {
     background-color: blueviolet;
-    width: 100%;
+    width: 3px;
     height: 100%;
 }
 
@@ -225,6 +226,8 @@
 .buttonDayWeekContainer {
     width: 100%;
     margin: 20px 0;
+    z-index: 2;
+    position: relative;
 }
 
 .cs {
@@ -245,7 +248,7 @@
 
 .dayWeekContent>div:first-of-type {
     background-color: blueviolet;
-    width: 100%;
+    width: 3px;
     height: 100%;
 }
 
@@ -279,4 +282,18 @@
     width: 100%;
     font-size: 0.8rem;
     min-height: 0.8rem;
+}
+
+.reloadCat {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    background-color: #F3F5F9;
+}
+
+.errorAlert{
+    
 }
