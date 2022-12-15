@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button'
 import "./groupstyle.css"
-import { Alert, IconButton, TextField } from "@mui/material";
+import { Alert, IconButton, Snackbar, TextField } from "@mui/material";
 import { DoorBackOutlined, SettingsAccessibility, Sledding } from "@mui/icons-material";
 import NewReleases from "@mui/icons-material/NewReleasesOutlined";
 import { Select } from "@mui/material";
@@ -23,6 +23,8 @@ function Group() {
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [newSheduleIconVisible, setNewSheduleIconVisible] = useState(false);
+    const [alertText, setAlertText] = useState("Aloxa");
+    const [alertOpen, setAlertOpen] = useState(true);
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
@@ -38,9 +40,19 @@ function Group() {
         }
     };
 
-    const CustomAlert = (text) => {
+    const snackbarOnClose =(event, reason) =>{
+        if(reason === "clickaway"){
+            return;
+        }
+
+        setAlertOpen(false);
+    }
+
+    const CustomSnackbar = () => {
         return (
-            <Alert className="errorAlert">{text}</Alert>
+            <Snackbar open={alertOpen} onClose={snackbarOnClose} autoHideDuration={6000} className="errorAlert">
+                <Alert>{alertText}</Alert>
+            </Snackbar>
         )
     }
 
@@ -217,6 +229,7 @@ function Group() {
                 {spisok}
                 <img className="reloadCat" src={ReloadCat}></img>
             </div>
+            <CustomSnackbar />
         </div>
     );
 }
