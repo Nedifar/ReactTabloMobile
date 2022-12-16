@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button'
 import "./groupstyle.css"
-import { Alert, IconButton, Snackbar, TextField } from "@mui/material";
+import { Alert, AlertTitle, Dialog, DialogActions, DialogContent, Grow, IconButton, Slide, Snackbar, TextField } from "@mui/material";
 import { DoorBackOutlined, SettingsAccessibility, Sledding } from "@mui/icons-material";
 import NewReleases from "@mui/icons-material/NewReleasesOutlined";
 import { Select } from "@mui/material";
@@ -16,6 +16,10 @@ import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
+})
+
 function Group() {
     const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
@@ -23,11 +27,18 @@ function Group() {
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [newSheduleIconVisible, setNewSheduleIconVisible] = useState(false);
-    const [alertText, setAlertText] = useState("Aloxa");
-    const [alertOpen, setAlertOpen] = useState(true);
+    const [alertState, setAlertState] = useState({
+        open: false,
+        text: "Пизда рулям"
+    })
+    function GrowTransition(props) {
+        return <Grow {...props} />;
+    }
+
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
+
     const NewSheduleButton = () => {
         if (newSheduleIconVisible) {
             return (
@@ -40,19 +51,32 @@ function Group() {
         }
     };
 
-    const snackbarOnClose =(event, reason) =>{
-        if(reason === "clickaway"){
-            return;
-        }
+    const handleDialogButtonClose = () => {
+        setAlertState({ open: false })
+    }
 
-        setAlertOpen(false);
+    const snackbarOnClose = () => {
+        // if (reason === "clickaway") {
+        //     return;
+        // }
+
+        // setAlertOpen(false);
     }
 
     const CustomSnackbar = () => {
         return (
-            <Snackbar open={alertOpen} onClose={snackbarOnClose} autoHideDuration={6000} className="errorAlert">
-                <Alert>{alertText}</Alert>
-            </Snackbar>
+            <div>
+            <Dialog keepMounted TransitionComponent={Transition} open={alertState.open} onClose={handleDialogButtonClose} /*autoHideDuration={6000}*/ >
+                <Alert severity="error" className="errorAlert">
+                    <AlertTitle>Ошибка</AlertTitle>
+                    <p>{alertState.text}</p>
+                </Alert>
+                <DialogActions>
+                    <Button className="alertBtn" onClick={handleDialogButtonClose}>Повторить</Button>
+                    <Button className="alertBtn" onClick={handleDialogButtonClose}>Отмена</Button>
+                </DialogActions>
+            </Dialog>
+            </div>
         )
     }
 
@@ -186,7 +210,7 @@ function Group() {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect handleGroupChange={handleGroupChange} />
+                    <GroupSelect setOOpen={setAlertState} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton hidden className="settingsButton">
@@ -277,6 +301,7 @@ class GroupSelect extends React.Component {
 
                 }
             }).catch(err => {
+                this.props.setOOpen({open:true, text:""});
                 console.log(err);
             })
         setTimeout(() => {

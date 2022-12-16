@@ -295,5 +295,16 @@
 }
 
 .errorAlert{
-    
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
 }
+.css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    background-color: transparent !important;
+}
+.css-hlj6pa-MuiDialogActions-root{
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
+    margin-top: -2px;
+}
+
+.alertBtn{}
