@@ -3,8 +3,16 @@ height: 100vh;
 width: 100%;
 }
 .nav{
-height: 7% !important;
 width: 100%;
 position: absolute;
 bottom: 0;
+}
+
+body > #root + div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    background-color: transparent !important;
+}
+body > #root + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
+    margin-top: -2px;
 }

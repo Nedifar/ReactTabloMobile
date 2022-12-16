@@ -16,24 +16,13 @@ import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
-})
-
-function Group() {
+function Group(props) {
     const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [newSheduleIconVisible, setNewSheduleIconVisible] = useState(false);
-    const [alertState, setAlertState] = useState({
-        open: false,
-        text: "Пизда рулям"
-    })
-    function GrowTransition(props) {
-        return <Grow {...props} />;
-    }
 
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
@@ -50,35 +39,6 @@ function Group() {
             return null;
         }
     };
-
-    const handleDialogButtonClose = () => {
-        setAlertState({ open: false })
-    }
-
-    const snackbarOnClose = () => {
-        // if (reason === "clickaway") {
-        //     return;
-        // }
-
-        // setAlertOpen(false);
-    }
-
-    const CustomSnackbar = () => {
-        return (
-            <div>
-            <Dialog keepMounted TransitionComponent={Transition} open={alertState.open} onClose={handleDialogButtonClose} /*autoHideDuration={6000}*/ >
-                <Alert severity="error" className="errorAlert">
-                    <AlertTitle>Ошибка</AlertTitle>
-                    <p>{alertState.text}</p>
-                </Alert>
-                <DialogActions>
-                    <Button className="alertBtn" onClick={handleDialogButtonClose}>Повторить</Button>
-                    <Button className="alertBtn" onClick={handleDialogButtonClose}>Отмена</Button>
-                </DialogActions>
-            </Dialog>
-            </div>
-        )
-    }
 
     useEffect(() => {
         let list = document.querySelectorAll('p[data-type="Day"]')
@@ -210,7 +170,7 @@ function Group() {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect setOOpen={setAlertState} handleGroupChange={handleGroupChange} />
+                    <GroupSelect setOOpen={props.handleErrorDialog} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton hidden className="settingsButton">
@@ -253,7 +213,6 @@ function Group() {
                 {spisok}
                 <img className="reloadCat" src={ReloadCat}></img>
             </div>
-            <CustomSnackbar />
         </div>
     );
 }
@@ -289,16 +248,20 @@ class GroupSelect extends React.Component {
     handleChange = (e) => {
         let img = document.querySelector('.reloadCat');
         let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
+        let shed = document.querySelector(".shedule");
         img.style = "opacity: 1; z-index: 3";
+        shed.style = "overflow: hidden";
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        this.setState({ group: e.target.value, })
         this.props.handleGroupChange([]);
         axios.get(`http://192.168.147.51:81/api/lastdance/getgroupmobile/${e.target.value}?Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
                     this.props.handleGroupChange(response.data);
-
+                    itemsShedule.forEach(element => {
+                        element.style="";
+                    });
+                    this.setState({ group: e.target.value, })
                 }
             }).catch(err => {
                 this.props.setOOpen({open:true, text:""});
