@@ -23,7 +23,8 @@ function Group(props) {
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [newSheduleIconVisible, setNewSheduleIconVisible] = useState(false);
-
+    const iconStyle = { fontSize: 45 }
+    
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
@@ -126,6 +127,7 @@ function Group(props) {
                                 <p>
                                     SHEDULE
                                 </p>
+
                                 {getLessonBlock(element.dayWeekClasses)}
                             </div>
 
@@ -155,8 +157,6 @@ function Group(props) {
 
     }
 
-    const iconStyle = { fontSize: 45 }
-
     return (
         <div className="main">
             <div className="headerGrid">
@@ -170,7 +170,7 @@ function Group(props) {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect setOOpen={props.handleErrorDialog} handleGroupChange={handleGroupChange} />
+                    <GroupSelect setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton hidden className="settingsButton">
@@ -202,7 +202,8 @@ function Group(props) {
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
                     <MobileDatePicker className="weekDate"
                         value={value}
-                        onChange={handleDateChange}
+                        onAccept={handleDateChange}
+                        onChange={(newValue) => { setValue(newValue) }}
                         renderInput={(params) => <TextField {...params} />}
                     >
                     </MobileDatePicker>
@@ -210,7 +211,9 @@ function Group(props) {
             </div>
             <div className="shedule">
                 <p>LastDance</p>
-                {spisok}
+                <div className="contLessonsBlock">
+                    {spisok}
+                </div>
                 <img className="reloadCat" src={ReloadCat}></img>
             </div>
         </div>
@@ -239,8 +242,19 @@ class GroupSelect extends React.Component {
         axios.get("http://192.168.147.51:81/api/lastdance/getgrouplist").then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
+
             }
         }).catch(err => {
+            this.props.dialogActions({
+                ok: () => {
+                    this.props.setOOpen({ open: false });
+                    this.componentDidMount();
+                },
+                cancel: () => {
+                    this.props.setOOpen({ open: false });
+                }
+            });
+            this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
             console.log("err")
         })
     }
@@ -258,13 +272,10 @@ class GroupSelect extends React.Component {
                 if (response.status === 200) {
                     console.log(response.data);
                     this.props.handleGroupChange(response.data);
-                    itemsShedule.forEach(element => {
-                        element.style="";
-                    });
                     this.setState({ group: e.target.value, })
                 }
             }).catch(err => {
-                this.props.setOOpen({open:true, text:""});
+                this.props.setOOpen({ open: true, text: "" });
                 console.log(err);
             })
         setTimeout(() => {
@@ -273,6 +284,7 @@ class GroupSelect extends React.Component {
             itemsShedule.forEach(element => {
                 element.style = "";
             });
+            shed.style = "overflow: scroll";
         }, 3000);
     }
 

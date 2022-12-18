@@ -11,8 +11,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function SharePage() {
     const [navigationValue, setNavigationValue] = useState('group');
     const [dialogState, setDialogState] = useState({open:false, text: "Пизда рулям"});
-    const [currentView, setCurrentView] = useState(<Group handelOkDialogAction handleErrorDialog={setDialogState}/>);
-
+    const [handleDialogActions, setHandleDialogActions] = useState({ok:()=>{}, cancel:()=>{}});
+    const [currentView, setCurrentView] = useState(<Group handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState}/>);
+    
 
 
     return (
@@ -31,10 +32,10 @@ function SharePage() {
             <Dialog keepMounted TransitionComponent={Transition} open={dialogState.open} onClose={()=>setDialogState({open:false})} className="error"/*autoHideDuration={6000}*/ >
                 <Alert severity="error" className="errorAlert">
                     <AlertTitle>Ошибка</AlertTitle>
-                    <p>us</p>
+                    <p>{dialogState.text}</p>
                 </Alert>
                 <DialogActions>
-                    <Button className="alertBtn" onClick={()=>setDialogState({open:false})}>Повторить</Button>
+                    <Button className="alertBtn" onClick={handleDialogActions.ok}>Повторить</Button>
                     <Button className="alertBtn" onClick={()=>setDialogState({open:false})}>Отмена</Button>
                 </DialogActions>
             </Dialog>
