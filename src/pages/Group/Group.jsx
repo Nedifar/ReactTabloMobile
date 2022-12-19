@@ -22,6 +22,8 @@ function Group(props) {
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
+    const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
+    const [resetGroup, setResetGroup] = useState(false);
     const iconStyle = { fontSize: 45 }
 
     const handleGroupChange = (dayWeeks) => {
@@ -65,22 +67,52 @@ function Group(props) {
     })
 
     const handleDateChange = (newValue) => {
-        setDateFormat(new DateFormat(new Date(newValue.year(), newValue.month(), newValue.date())));
-        setValue(newValue);
         let val = document.querySelector('.headerCenterBlock >div >input');
         let img = document.querySelector('.reloadCat');
         let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
         img.style = "opacity: 1; z-index: 3";
         handleGroupChange([]);
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${val.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${val.value}&Date=${+newValue.month()+1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
+        setDateFormat(new DateFormat(new Date(newValue.year(), newValue.month(), newValue.date())));
+                    setValue(newValue);
                     handleGroupChange(response.data);
                 }
-            }).catch(err => {
 
+            }).catch(err => {
+                if (err.response.status === 404) {
+                    if (err.response.data == "Расписание для данной недели не найдено. Повторить поиск?") {
+                        props.handleDialogActions({
+                            ok: () => {
+                                props.handleErrorDialog({ open: false });
+                                handleDateChange(newValue);
+                            },
+                            cancel: () => {
+                                props.handleErrorDialog({ open: false });
+                                setValue(oldDate);
+                                handleDateChange(oldDate);
+                            }
+                        });
+                    }
+                    else if (err.response.data == "Расписания для данной группы не найдено. Повторить поиск?") {
+                        props.handleDialogActions({
+
+                            ok: () => {
+                                props.handleErrorDialog({ open: false });
+                                handleDateChange(newValue);
+                            },
+                            cancel: () => {
+                                props.handleErrorDialog({ open: false });
+                                setResetGroup(true);
+                                setResetGroup(false);
+                            }
+                        });
+                    }
+                    props.handleErrorDialog({ open: true, text: err.response.data });
+                }
                 console.log(err);
             })
         setTimeout(() => {
@@ -169,7 +201,7 @@ function Group(props) {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
+                    <GroupSelect resetGroup={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton hidden className="settingsButton">
@@ -202,7 +234,9 @@ function Group(props) {
                     <MobileDatePicker className="weekDate"
                         value={value}
                         onAccept={handleDateChange}
-                        onChange={(newValue) => { setValue(newValue) }}
+                        onChange={(newValue) => { 
+                            setOldDate(value);
+                            setValue(newValue); }}
                         renderInput={(params) => <TextField {...params} />}
                     >
                     </MobileDatePicker>
@@ -234,7 +268,7 @@ class GroupSelect extends React.Component {
         this.state = {
             list: [""],
             group: "",
-            currentDate: (+(new Date().getMonth())+1) + "." + new Date().getDate() + "." + new Date().getFullYear()
+            currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
     }
 
@@ -261,7 +295,7 @@ class GroupSelect extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let d = "";
+
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
@@ -284,7 +318,9 @@ class GroupSelect extends React.Component {
                 console.log("err")
             })
         }
-
+        if (prevProps.resetGroup) {
+            this.handleChange({ target: "" });
+        }
     }
 
     handleChange = (e) => {
@@ -303,8 +339,6 @@ class GroupSelect extends React.Component {
                     this.setState({ group: e.target.value, })
                 }
             }).catch(err => {
-                this.props.setOOpen({ open: true, text: "" });
-                console.log(err);
             })
         setTimeout(() => {
             img.style = "opacity: 0; z-index: 1";

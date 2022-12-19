@@ -50,7 +50,7 @@ useEffect(()=>{
                 </Alert>
                 <DialogActions>
                     <Button className="alertBtn" onClick={handleDialogActions.ok}>Повторить</Button>
-                    <Button className="alertBtn" onClick={()=>setDialogState({open:false})}>Отмена</Button>
+                    <Button className="alertBtn" onClick={handleDialogActions.cancel}>Отмена</Button>
                 </DialogActions>
             </Dialog>
         </div>
