@@ -22,15 +22,14 @@ function Group(props) {
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
-    const [newSheduleIconVisible, setNewSheduleIconVisible] = useState(false);
     const iconStyle = { fontSize: 45 }
-    
+
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
 
     const NewSheduleButton = () => {
-        if (newSheduleIconVisible) {
+        if (props.newShedule) {
             return (
                 <IconButton>
                     <NewReleases style={iconStyle} />
@@ -74,7 +73,7 @@ function Group(props) {
         img.style = "opacity: 1; z-index: 3";
         handleGroupChange([]);
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://192.168.147.51:81/api/lastdance/getgroupmobile/${val.value}?Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${val.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
@@ -234,12 +233,14 @@ class GroupSelect extends React.Component {
         super(props);
         this.state = {
             list: [""],
-            group: ""
+            group: "",
+            currentDate: (+(new Date().getMonth())+1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
     }
 
     componentDidMount() {
-        axios.get("http://192.168.147.51:81/api/lastdance/getgrouplist").then((response) => {
+        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
 
@@ -259,6 +260,33 @@ class GroupSelect extends React.Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        let d = "";
+        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
+            this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
+            axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
+                if (response.status === 200) {
+                    this.setState({ list: response.data });
+
+                }
+            }).catch(err => {
+                this.props.dialogActions({
+                    ok: () => {
+                        this.props.setOOpen({ open: false });
+                        this.componentDidMount();
+                    },
+                    cancel: () => {
+                        this.props.setOOpen({ open: false });
+                    }
+                });
+                this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
+                console.log("err")
+            })
+        }
+
+    }
+
     handleChange = (e) => {
         let img = document.querySelector('.reloadCat');
         let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
@@ -267,7 +295,7 @@ class GroupSelect extends React.Component {
         shed.style = "overflow: hidden";
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         this.props.handleGroupChange([]);
-        axios.get(`http://192.168.147.51:81/api/lastdance/getgroupmobile/${e.target.value}?Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
