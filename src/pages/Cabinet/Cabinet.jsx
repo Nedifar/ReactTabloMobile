@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from '@mui/material/Button'
-import "./groupstyle.css"
+import "./cabinetstyle.css"
 import { Alert, AlertTitle, Dialog, DialogActions, DialogContent, Grow, IconButton, List, Slide, Snackbar, TextField } from "@mui/material";
 import { DoorBackOutlined, SettingsAccessibility, Sledding } from "@mui/icons-material";
 import NewReleases from "@mui/icons-material/NewReleasesOutlined";
@@ -16,17 +16,17 @@ import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
 
-function Group(props) {
+function Cabinet(props) {
     const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
-    const [resetGroup, setResetGroup] = useState(false);
+    const [resetCabinet, setResetCabinet] = useState(false);
     const iconStyle = { fontSize: 45 }
 
-    const handleGroupChange = (dayWeeks) => {
+    const handleCabinetChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
 
@@ -125,15 +125,15 @@ function Group(props) {
         let img = document.querySelector('.reloadCat');
         let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
         img.style = "opacity: 1; z-index: 3";
-        handleGroupChange([]);
+        handleCabinetChange([]);
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
+        axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
                     setDateFormat(new DateFormat(new Date(newValue.year(), newValue.month(), newValue.date())));
                     setValue(newValue);
-                    handleGroupChange(response.data);
+                    handleCabinetChange(response.data);
                 }
 
             }).catch(err => {
@@ -160,8 +160,8 @@ function Group(props) {
                             },
                             cancel: () => {
                                 props.handleErrorDialog({ open: false });
-                                setResetGroup(true);
-                                setResetGroup(false);
+                                setResetCabinet(true);
+                                setResetCabinet(false);
                             }
                         });
                     }
@@ -233,7 +233,7 @@ function Group(props) {
             lessonBlocks.push(
                 <div key={element.Day + element.beginMobile}>
                     <p>{element.number}</p>
-                    <p data-type="Day" data-typedata={element.Day}>{element.day.replace('\n', "<br>")}</p>
+                    <p data-type="Day" data-typedata={element.Day}>{element.day.replace('\n', "<br>").replace('\n', "<br>")}</p>
                     <p>{element.beginMobile}-{element.endMobile}</p>
                 </div>);
         });
@@ -254,7 +254,7 @@ function Group(props) {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect resetGroup={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
+                    <CabinetSelect resetCabinet={resetCabinet} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleCabinetChange={handleCabinetChange} />
                 </div>
                 <div className="rightItemsBlock">
                     <IconButton hidden className="settingsButton">
@@ -316,19 +316,19 @@ function expander(e) {
     }
 }
 
-class GroupSelect extends React.Component {
+class CabinetSelect extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             list: [""],
-            group: "",
+            cabinet: "",
             currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
     }
 
     componentDidMount() {
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${this.state.currentDate}`).then((response) => {
+        axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
 
@@ -353,7 +353,7 @@ class GroupSelect extends React.Component {
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
-            axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
+            axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
                 if (response.status === 200) {
                     this.setState({ list: response.data });
 
@@ -384,13 +384,13 @@ class GroupSelect extends React.Component {
         img.style = "opacity: 1; z-index: 3";
         shed.style = "overflow: hidden";
         let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        this.props.handleGroupChange([]);
-        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        this.props.handleCabinetChange([]);
+        axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
-                    this.props.handleGroupChange(response.data);
-                    this.setState({ group: e.target.value, })
+                    this.props.handleCabinetChange(response.data);
+                    this.setState({ cabinet: e.target.value, })
                 }
             }).catch(err => {
             })
@@ -413,7 +413,7 @@ class GroupSelect extends React.Component {
     }
     render() {
         return (
-            <Select variant="standard" value={this.state.group} onChange={this.handleChange} IconComponent={undefined} className="groupSelect" >
+            <Select variant="standard" value={this.state.cabinet} onChange={this.handleChange} IconComponent={undefined} className="groupSelect" >
                 {this.selectItem()}
             </Select>
         );
@@ -421,4 +421,4 @@ class GroupSelect extends React.Component {
 }
 
 
-export default Group;
+export default Cabinet;

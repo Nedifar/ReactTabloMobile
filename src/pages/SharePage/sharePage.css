@@ -16,3 +16,40 @@ body > #root + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
     background-color: #160B0B !important;
     margin-top: -2px;
 }
+
+body > #root + div + div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    background-color: transparent !important;
+}
+body > #root + div + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
+    margin-top: -2px;
+}
+body > #root + div + div[role="presentation"] label{
+    color: #F4C7C7;
+}
+
+body > #root + div + div[role="presentation"] label + div{
+    border-bottom: 2px solid #F4C7C7;
+    color: #F4C7C7;
+}
+
+body > #root + div +div +div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+    background-color: transparent !important;
+}
+body > #root + div + div + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
+    margin-top: -2px;
+}
+
+body > #root + div + div[role="presentation"] .css-1a1fmpi-MuiInputBase-root-MuiInput-root:after{
+    bottom: -2.1px;
+    left: -0.3px;
+    right: -0.3px;
+
+}
+
+body > #root + div + div[role="presentation"] input{
+    color: #F4C7C7;
+}
