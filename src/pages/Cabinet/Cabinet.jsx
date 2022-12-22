@@ -43,15 +43,15 @@ function Cabinet(props) {
     };
 
     useEffect(() => {
-        let list = document.querySelectorAll('p[data-type="Day"]')
+        let list = document.querySelectorAll('#cabinetMain p[data-type="Day"]')
         list.forEach(element => {
             element.innerHTML = element.firstChild?.data.replace('\n', '<br>');
             if (element.innerHTML == "undefined") {
                 element.innerHTML = "-";
             }
         });
-        let listBlocksForColors = document.querySelectorAll('.dayWeekContainer > div:first-child');
-        let listBlocksForColors1 = document.querySelectorAll('.dayWeekContent > div:first-child');
+        let listBlocksForColors = document.querySelectorAll('#cabinetMain .dayWeekContainer > div:first-child');
+        let listBlocksForColors1 = document.querySelectorAll('#cabinetMain .dayWeekContent > div:first-child');
         let colors = ["#B96CBD", "#49A24D", "#FDA838", "#F75355", "#00C6AE", "#455399"];
         let counterColor = 0;
         for (let i = 0; i < listBlocksForColors.length; i++) {
@@ -72,7 +72,7 @@ function Cabinet(props) {
             open: true,
             content: "Выберите пару, и я выведу вам свободные кабинеты во время этой пары.",
             ok: () => {
-                let val = document.querySelector("#infoAlert input").value;
+                let val = document.querySelector("#cabinetMain #infoAlert input").value;
                 if (val != null && val.length == 1) {
                     axios.get(`http://localhost:5014/api/lastdance/searchEmptycabinet/${val}`)
                         .then((response) => {
@@ -121,12 +121,12 @@ function Cabinet(props) {
     }
 
     const handleDateChange = (newValue) => {
-        let val = document.querySelector('.headerCenterBlock >div >input');
-        let img = document.querySelector('.reloadCat');
-        let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
+        let val = document.querySelector('#cabinetMain .headerCenterBlock >div >input');
+        let img = document.querySelector('#cabinetMain .reloadCat');
+        let itemsShedule = document.querySelectorAll('#cabinetMain .shedule *:not(img)')
         img.style = "opacity: 1; z-index: 3";
         handleCabinetChange([]);
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
@@ -171,7 +171,7 @@ function Cabinet(props) {
             })
         setTimeout(() => {
             img.style = "opacity: 0; z-index: 1";
-            itemsShedule = document.querySelectorAll('.shedule > *:not(img)');
+            itemsShedule = document.querySelectorAll('#cabinetMain .shedule > *:not(img)');
             itemsShedule.forEach(element => {
                 element.style = "";
             });
@@ -242,7 +242,7 @@ function Cabinet(props) {
     }
 
     return (
-        <div className="main">
+        <div className="main" id="cabinetMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
@@ -327,7 +327,7 @@ class CabinetSelect extends React.Component {
     }
 
     componentDidMount() {
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
@@ -350,7 +350,7 @@ class CabinetSelect extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
             axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
@@ -378,12 +378,12 @@ class CabinetSelect extends React.Component {
     }
 
     handleChange = (e) => {
-        let img = document.querySelector('.reloadCat');
-        let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
-        let shed = document.querySelector(".shedule");
+        let img = document.querySelector('#cabinetMain .reloadCat');
+        let itemsShedule = document.querySelectorAll('#cabinetMain .shedule *:not(img)')
+        let shed = document.querySelector("#cabinetMain .shedule");
         img.style = "opacity: 1; z-index: 3";
         shed.style = "overflow: hidden";
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         this.props.handleCabinetChange([]);
         axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {

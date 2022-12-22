@@ -1,11 +1,15 @@
 import { GroupsOutlined, MeetingRoomOutlined, SchoolOutlined } from "@mui/icons-material";
-import { Alert, AlertTitle, BottomNavigation, BottomNavigationAction, Button, Dialog, DialogActions, Slide, TextField } from "@mui/material";
+import { Alert, AlertTitle, BottomNavigation, BottomNavigationAction, Button, Collapse, Dialog, DialogActions, Fade, Slide, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import Group from "../Group/Group";
 import Cabinet from "../Cabinet/Cabinet"
 import Teacher from "../Teacher/Teacher"
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import "./sharePage.css"
+import { useTheme } from "@emotion/react";
+import SwipeableViews from "react-swipeable-views";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
@@ -21,16 +25,17 @@ function SharePage() {
         ok: () => { },
         cancel: () => { }
     });
+    const [transitionChecked, setTransitionChecked] = useState(true);
     const [infoDialog, setInfoDialog] = useState({
         content: null,
         open: false
-    })
-    const [newShedule, setNewShedule] = useState(false);
-    const [currentView, setCurrentView] = useState(<div/>);
-    const [groupState, setGroupState] = useState(<Group newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
-    const [cabinetState, setCabinetState] = useState(<Cabinet newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
-    const [teacherState, setTeacherState] = useState(<Teacher newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
-    const nodeRef = useRef(null);
+    });
+    const theme = useTheme();
+    const [indexPage, setIndexPage] = React.useState(0);
+    const [newShedule, setNewShedule] = useState(true);
+    const [groupState, setGroupState] = useState(<div />);
+    const [cabinetState, setCabinetState] = useState(<div />);
+    const [teacherState, setTeacherState] = useState(<div />);
 
     useEffect(() => {
         axios.get("http://192.168.147.51:81/api/lastdance/getnes").then((response) => {
@@ -40,29 +45,49 @@ function SharePage() {
             else {
                 setNewShedule(false);
             }
+            setGroupState(<Group newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
+            setCabinetState(<Cabinet newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
+            setTeacherState(<Teacher newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
         }).catch((err) => {
             console.log(err);
         })
-        setCurrentView(groupState);
     }, [newShedule])
+
+    const handleChangeIndex = (index) => {
+        if (index == 0) {
+            setNavigationValue("group");
+        }
+        else if (index == 1) {
+            setNavigationValue("cabinet");
+        }
+        else if (index == 2) {
+            setNavigationValue("teacher");
+        }
+        //setIndexPage(index);
+      };
 
     return (
         <div className="mainShare">
-            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                {state=>(
-                    currentView
-                )}
-            </Slide>
+            <SwipeableViews
+                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                index={indexPage}
+                className="divContainerForPages"
+                onChangeIndex={handleChangeIndex}
+            >
+                {groupState}
+                {cabinetState}
+                {teacherState}
+            </SwipeableViews>
             <BottomNavigation className="nav" value={navigationValue} onChange={(event, newValue) => {
                 setNavigationValue(newValue);
                 if (newValue == "group") {
-                    setCurrentView(groupState)
+                    setIndexPage(0);
                 }
                 else if (newValue == "cabinet") {
-                    setCurrentView(cabinetState);
+                    setIndexPage(1);
                 }
                 else if (newValue == "teacher") {
-                    setCurrentView(teacherState);
+                    setIndexPage(2);
                 }
             }}>
                 <BottomNavigationAction label="Group" value="group" icon={<GroupsOutlined />}>
@@ -116,7 +141,7 @@ function SharePage() {
                     <Button className="alertBtn" onClick={() => { setInfoDialog({ open: false }) }}>Ok</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </div >
     );
 }
 

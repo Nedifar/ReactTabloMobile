@@ -43,15 +43,15 @@ function Group(props) {
     };
 
     useEffect(() => {
-        let list = document.querySelectorAll('p[data-type="Day"]')
+        let list = document.querySelectorAll('#groupMain p[data-type="Day"]')
         list.forEach(element => {
             element.innerHTML = element.firstChild?.data.replace('\n', '<br>');
             if (element.innerHTML == "undefined") {
                 element.innerHTML = "-";
             }
         });
-        let listBlocksForColors = document.querySelectorAll('.dayWeekContainer > div:first-child');
-        let listBlocksForColors1 = document.querySelectorAll('.dayWeekContent > div:first-child');
+        let listBlocksForColors = document.querySelectorAll('#groupMain .dayWeekContainer > div:first-child');
+        let listBlocksForColors1 = document.querySelectorAll('#groupMain .dayWeekContent > div:first-child');
         let colors = ["#B96CBD", "#49A24D", "#FDA838", "#F75355", "#00C6AE", "#455399"];
         let counterColor = 0;
         for (let i = 0; i < listBlocksForColors.length; i++) {
@@ -72,7 +72,7 @@ function Group(props) {
             open: true,
             content: "Выберите пару, и я выведу вам свободные кабинеты во время этой пары.",
             ok: () => {
-                let val = document.querySelector("#infoAlert input").value;
+                let val = document.querySelector("#groupMain #infoAlert input").value;
                 if (val != null && val.length == 1) {
                     axios.get(`http://localhost:5014/api/lastdance/searchEmptycabinet/${val}`)
                         .then((response) => {
@@ -121,12 +121,12 @@ function Group(props) {
     }
 
     const handleDateChange = (newValue) => {
-        let val = document.querySelector('.headerCenterBlock >div >input');
-        let img = document.querySelector('.reloadCat');
-        let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
+        let val = document.querySelector('#groupMain .headerCenterBlock >div >input');
+        let img = document.querySelector('#groupMain .reloadCat');
+        let itemsShedule = document.querySelectorAll('#groupMain .shedule *:not(img)')
         img.style = "opacity: 1; z-index: 3";
         handleGroupChange([]);
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
@@ -171,7 +171,7 @@ function Group(props) {
             })
         setTimeout(() => {
             img.style = "opacity: 0; z-index: 1";
-            itemsShedule = document.querySelectorAll('.shedule > *:not(img)');
+            itemsShedule = document.querySelectorAll('#groupMain .shedule > *:not(img)');
             itemsShedule.forEach(element => {
                 element.style = "";
             });
@@ -242,7 +242,7 @@ function Group(props) {
     }
 
     return (
-        <div className="main">
+        <div className="main" id="groupMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
@@ -327,7 +327,7 @@ class GroupSelect extends React.Component {
     }
 
     componentDidMount() {
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
@@ -350,7 +350,7 @@ class GroupSelect extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
 
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
             axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
@@ -378,12 +378,12 @@ class GroupSelect extends React.Component {
     }
 
     handleChange = (e) => {
-        let img = document.querySelector('.reloadCat');
-        let itemsShedule = document.querySelectorAll('.shedule *:not(img)')
-        let shed = document.querySelector(".shedule");
+        let img = document.querySelector('#groupMain .reloadCat');
+        let itemsShedule = document.querySelectorAll('#groupMain .shedule *:not(img)')
+        let shed = document.querySelector("#groupMain .shedule");
         img.style = "opacity: 1; z-index: 3";
         shed.style = "overflow: hidden";
-        let doc = document.querySelector('.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         this.props.handleGroupChange([]);
         axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
@@ -396,7 +396,7 @@ class GroupSelect extends React.Component {
             })
         setTimeout(() => {
             img.style = "opacity: 0; z-index: 1";
-            itemsShedule = document.querySelectorAll('.shedule > *:not(img)');
+            itemsShedule = document.querySelectorAll('#groupMain .shedule > *:not(img)');
             itemsShedule.forEach(element => {
                 element.style = "";
             });
