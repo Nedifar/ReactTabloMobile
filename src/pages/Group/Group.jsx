@@ -15,6 +15,7 @@ import 'dayjs/locale/ru'
 import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
+import SettingsL from "../Settings/Settings";
 
 function Group(props) {
     const [count, setCount] = useState(0);
@@ -25,6 +26,7 @@ function Group(props) {
     const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
     const [resetGroup, setResetGroup] = useState(false);
     const iconStyle = { fontSize: 45 }
+
 
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
@@ -257,7 +259,7 @@ function Group(props) {
                     <GroupSelect resetGroup={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton hidden className="settingsButton">
+                    <IconButton hidden className="settingsButton" onClick={()=>props.back(true)}>
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -303,6 +305,7 @@ function Group(props) {
                 </div>
                 <img className="reloadCat" src={ReloadCat}></img>
             </div>
+
         </div>
     );
 }

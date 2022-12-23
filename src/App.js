@@ -9,7 +9,7 @@ function App() {
   return (
     <div className='App'>
       <Routes>
-        <Route path="/" element={<Settings/>}/>
+        <Route path="/" element={<SharePage/>}/>
       </Routes>
     </div>
   );

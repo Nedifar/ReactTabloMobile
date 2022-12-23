@@ -2,6 +2,8 @@
     height: 100%;
     width: 100%;
     background-color: #f4f4f5;
+    position: absolute;
+    top: 0;
 }
 
 .mainSettings>div:first-of-type div {
@@ -54,6 +56,10 @@
     width: 100%;
     bottom: 0.9rem;
 }
+.groupSelectSet>div{
+    background-color: transparent !important;
+}
+
 
 .groupSettings>div>div:first-of-type {
     height: 100%;
@@ -100,6 +106,10 @@
     padding-left: 8px;
     width: 100%;
     bottom: 0.9rem;
+    background-color: transparent !important;
+}
+.cabinetSelectSet>div{
+    background-color: transparent !important;
 }
 
 .cabinetSettings>div>div:first-of-type {
@@ -147,6 +157,10 @@
     padding-left: 8px;
     width: 100%;
     bottom: 0.9rem;
+    background-color: transparent !important;
+}
+.teacherSelectSet>div{
+    background-color: transparent !important;
 }
 
 .teacherSettings>div>div:first-of-type {

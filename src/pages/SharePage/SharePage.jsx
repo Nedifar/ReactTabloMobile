@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import "./sharePage.css"
 import { useTheme } from "@emotion/react";
 import SwipeableViews from "react-swipeable-views";
+import Settings from "../Settings/Settings";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
@@ -25,7 +26,7 @@ function SharePage() {
         ok: () => { },
         cancel: () => { }
     });
-    const [transitionChecked, setTransitionChecked] = useState(true);
+
     const [infoDialog, setInfoDialog] = useState({
         content: null,
         open: false
@@ -36,6 +37,7 @@ function SharePage() {
     const [groupState, setGroupState] = useState(<div />);
     const [cabinetState, setCabinetState] = useState(<div />);
     const [teacherState, setTeacherState] = useState(<div />);
+    const [settingsOpen, setSettingsOpen] = useState(false);
 
     useEffect(() => {
         axios.get("http://192.168.147.51:81/api/lastdance/getnes").then((response) => {
@@ -45,7 +47,7 @@ function SharePage() {
             else {
                 setNewShedule(false);
             }
-            setGroupState(<Group newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
+            setGroupState(<Group back={setSettingsOpen} newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
             setCabinetState(<Cabinet newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
             setTeacherState(<Teacher newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
         }).catch((err) => {
@@ -78,6 +80,7 @@ function SharePage() {
                 {cabinetState}
                 {teacherState}
             </SwipeableViews>
+            <Settings className="settings"/>
             <BottomNavigation className="nav" value={navigationValue} onChange={(event, newValue) => {
                 setNavigationValue(newValue);
                 if (newValue == "group") {
