@@ -15,10 +15,8 @@ import 'dayjs/locale/ru'
 import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
-import SettingsL from "../Settings/Settings";
 
 function Group(props) {
-    const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
@@ -27,7 +25,6 @@ function Group(props) {
     const [resetGroup, setResetGroup] = useState(false);
     const iconStyle = { fontSize: 45 }
 
-
     const handleGroupChange = (dayWeeks) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
@@ -35,7 +32,9 @@ function Group(props) {
     const NewSheduleButton = () => {
         if (props.newShedule) {
             return (
-                <IconButton>
+                <IconButton onClick={() => {
+                    let newShedDate = dayjs(new Date().toDateString());
+                    handleDateChange(newShedDate.add(7, 'day'))}}>
                     <NewReleases style={iconStyle} />
                 </IconButton>);
         }
@@ -74,7 +73,7 @@ function Group(props) {
             open: true,
             content: "Выберите пару, и я выведу вам свободные кабинеты во время этой пары.",
             ok: () => {
-                let val = document.querySelector("#groupMain #infoAlert input").value;
+                let val = document.querySelector("#infoAlert input").value;
                 if (val != null && val.length == 1) {
                     axios.get(`http://localhost:5014/api/lastdance/searchEmptycabinet/${val}`)
                         .then((response) => {
@@ -119,7 +118,6 @@ function Group(props) {
             },
             cancel: () => { props.emptyCabinetDialog({ open: false }) }
         });
-
     }
 
     const handleDateChange = (newValue) => {
@@ -137,7 +135,6 @@ function Group(props) {
                     setValue(newValue);
                     handleGroupChange(response.data);
                 }
-
             }).catch(err => {
                 if (err.response.status === 404) {
                     if (err.response.data == "Расписание для данной недели не найдено. Повторить поиск?") {
@@ -244,11 +241,11 @@ function Group(props) {
     }
 
     return (
-        <div className="main" id="groupMain">
+        <div onClick={() => props.back(false)} className="main" id="groupMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
-                        <DoorBackOutlined  style={iconStyle} />
+                        <DoorBackOutlined style={iconStyle} />
                     </IconButton>
                     <NewSheduleButton />
                 </div>
@@ -259,7 +256,7 @@ function Group(props) {
                     <GroupSelect resetGroup={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton hidden className="settingsButton" onClick={()=>props.back(true)}>
+                    <IconButton hidden className="settingsButton" onClick={(e) => { props.back(true); e.stopPropagation(); }}>
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -328,13 +325,21 @@ class GroupSelect extends React.Component {
             currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
     }
+    favorite = { value: localStorage.getItem("favoriteGroupValue"), viewWithRun: localStorage.getItem("favoriteGroupChecked") };
 
     componentDidMount() {
         let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
+                let indexRemove = response.data.indexOf(this.favorite.value);
+                if (this.favorite.value != null && indexRemove != -1) {
+                    response.data.unshift("☆" + this.favorite.value);
+                    response.data.splice(indexRemove+1, 1);
+                }
                 this.setState({ list: response.data });
-
+                if (this.favorite.viewWithRun === "true") {
+                    this.handleChange({ target: { value: "☆" + this.favorite.value } });
+                }
             }
         }).catch(err => {
             this.props.dialogActions({
@@ -352,14 +357,17 @@ class GroupSelect extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-
         let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
             axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
                 if (response.status === 200) {
+                    let indexRemove = response.data.indexOf(this.favorite.value);
+                    if (this.favorite.value != null && indexRemove != -1) {
+                        response.data.unshift("☆" + this.favorite.value);
+                        response.data.splice(indexRemove+1, 1);
+                    }
                     this.setState({ list: response.data });
-
                 }
             }).catch(err => {
                 this.props.dialogActions({
@@ -388,7 +396,8 @@ class GroupSelect extends React.Component {
         shed.style = "overflow: hidden";
         let doc = document.querySelector('#groupMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         this.props.handleGroupChange([]);
-        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        
+        axios.get(`http://localhost:5014/api/lastdance/getgroupmobile?group=${e.target.value.replace('☆', '')}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);

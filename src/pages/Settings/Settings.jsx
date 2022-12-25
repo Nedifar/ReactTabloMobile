@@ -26,6 +26,7 @@ function Settings(props) {
             axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
+                        listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
                         response.data.forEach((elem) => {
                             listResult.push(<MenuItem value={elem} key={elem}>{elem}</MenuItem>)
                         })
@@ -55,6 +56,7 @@ function Settings(props) {
             axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
+                        listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
                         response.data.forEach((elem) => {
                             listResult.push(<MenuItem value={elem} key={elem}>{elem}</MenuItem>)
                         })
@@ -84,6 +86,7 @@ function Settings(props) {
             axios.get(`http://localhost:5014/api/lastdance/getteacherslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
+                        listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
                         response.data.forEach((elem) => {
                             listResult.push(<MenuItem value={elem} key={elem}>{elem}</MenuItem>)
                         })
@@ -106,27 +109,36 @@ function Settings(props) {
     })
 
     const handleGroupSelectedChange = (e) => {
-        if (e == null) {
-            localStorage.setItem("favoriteGroupChecked", groupSelectedChecked);
+        if (e == true || e == false) {
+            localStorage.setItem("favoriteGroupChecked", e);
             return;
+        }
+        if(e.target.value == "Не выбрано"){
+            localStorage.setItem("favoriteGroupChecked", false);
         }
         setGroupSelectedValue( e.target.value );
         localStorage.setItem("favoriteGroupValue", e.target.value);
     }
 
     const handleCabinetSelectedChange = (e) => {
-        if (e == null) {
-            localStorage.setItem("favoriteCabinetChecked", cabinetSelectedChecked);
+        if (e == true || e == false) {
+            localStorage.setItem("favoriteCabinetChecked", e);
             return;
+        }
+        if(e.target.value == "Не выбрано"){
+            localStorage.setItem("favoriteCabinetChecked", false);
         }
         setCabinetSelectedValue( e.target.value );
         localStorage.setItem("favoriteCabinetValue", e.target.value);
     }
 
     const handleTeacherSelectedChange = (e) => {
-        if (e == null) {
-            localStorage.setItem("favoriteTeacherChecked", teacherSelectedChecked);
+        if (e == true || e == false) {
+            localStorage.setItem("favoriteTeacherChecked", e);
             return;
+        }
+        if(e.target.value == "Не выбрано"){
+            localStorage.setItem("favoriteTeacherChecked", false);
         }
         setTeacherSelectedValue( e.target.value );
         localStorage.setItem("favoriteTeacherValue", e.target.value);
@@ -140,7 +152,7 @@ function Settings(props) {
     return (
         <div className="mainSettings">
             <div className="settingsHeader">
-                <IconButton onClick={()=>props.backSettingsClick(true)}>
+                <IconButton onClick={()=>props.backSettingsClick(false)}>
                     <ArrowBack />
                 </IconButton>
                 <div>
@@ -159,7 +171,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox setLocalStorage={handleGroupSelectedChange} onChange={setGroupSelectedChecked} checked={groupSelectedValue} className="checkByRun" />
+                        <MyCheckBox haveValue={groupSelectedValue==null || groupSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleGroupSelectedChange} onChange={setGroupSelectedChecked} checked={groupSelectedChecked === "true"} className="checkByRun" />
                     </div>
                 </div>
             </div>
@@ -175,7 +187,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox setLocalStorage={handleCabinetSelectedChange} onChange={setCabinetSelectedChecked} className="checkByRun" checked={cabinetSelectedValue} />
+                        <MyCheckBox haveValue={cabinetSelectedValue==null|| cabinetSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleCabinetSelectedChange} onChange={setCabinetSelectedChecked} className="checkByRun" checked={cabinetSelectedChecked === "true"} />
                     </div>
                 </div>
             </div>
@@ -191,7 +203,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox setLocalStorage={handleTeacherSelectedChange} onChange={setTeacherSelectedChecked} checked={teacherSelectedValue} />
+                        <MyCheckBox haveValue={teacherSelectedValue==null || teacherSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleTeacherSelectedChange} onChange={setTeacherSelectedChecked} checked={teacherSelectedChecked === "true"} />
                     </div>
                 </div>
             </div>
@@ -199,17 +211,17 @@ function Settings(props) {
 }
 
 function MyCheckBox(props) {
-    const [checkValue, setCheckValue] = useState(props.checked);
+    const [checkValue, setCheckValue] = useState(props.checked ?? false);
 
     const handleCheckChanged = (e) => {
-        let check = e.target.value == "on" ? true : false;
+        let check = !checkValue;
         setCheckValue(check);
         props.onChange(check);
-        props.setLocalStorage();
+        props.setLocalStorage(check);
     }
 
     return (
-        <FormControlLabel control={<Checkbox checked={checkValue} onChange={handleCheckChanged} />} label="Выводить по умолчанию при загрузке?" />
+        <FormControlLabel control={<Checkbox disabled={props.haveValue} checked={checkValue} onChange={handleCheckChanged} />} label="Выводить по умолчанию при загрузке?" />
     );
 }
 

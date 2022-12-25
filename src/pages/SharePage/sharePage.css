@@ -64,6 +64,14 @@ body > #root + div + div[role="presentation"] input{
 }
 
 .settings{
+    height: 100%;
+    width: 100%;
+}
+
+.slide {
     position: absolute;
-    top:0;
+    top: 0;
+    right: 1px;
+    width: 100%;
+    z-index: 5;
 }

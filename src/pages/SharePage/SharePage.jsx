@@ -16,6 +16,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
 })
 
+const SettingsTransition = React.forwardRef(function Transition(props, ref) {
+    return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} >
+        
+    </Slide>
+})
+
 function SharePage() {
     const [navigationValue, setNavigationValue] = useState('group');
     const [dialogState, setDialogState] = useState({ open: false, text: "Пизда рулям" });
@@ -48,8 +54,8 @@ function SharePage() {
                 setNewShedule(false);
             }
             setGroupState(<Group back={setSettingsOpen} newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
-            setCabinetState(<Cabinet newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
-            setTeacherState(<Teacher newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
+            setCabinetState(<Cabinet back={setSettingsOpen} newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
+            setTeacherState(<Teacher back={setSettingsOpen} newShedule={newShedule} infoDialog={setInfoDialog} emptyCabinetDialog={setCabinetSelectDialog} handleDialogActions={setHandleDialogActions} handleErrorDialog={setDialogState} />);
         }).catch((err) => {
             console.log(err);
         })
@@ -66,10 +72,15 @@ function SharePage() {
             setNavigationValue("teacher");
         }
         //setIndexPage(index);
-      };
+    };
 
     return (
         <div className="mainShare">
+        <Slide className="slide" direction="left" in={settingsOpen} mountOnEnter unmountOnExit>
+                <div className="settings">
+                    <Settings backSettingsClick={setSettingsOpen}/>
+                </div>
+            </Slide>
             <SwipeableViews
                 axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                 index={indexPage}
@@ -80,7 +91,7 @@ function SharePage() {
                 {cabinetState}
                 {teacherState}
             </SwipeableViews>
-            <Settings className="settings"/>
+            
             <BottomNavigation className="nav" value={navigationValue} onChange={(event, newValue) => {
                 setNavigationValue(newValue);
                 if (newValue == "group") {
@@ -144,7 +155,7 @@ function SharePage() {
                     <Button className="alertBtn" onClick={() => { setInfoDialog({ open: false }) }}>Ok</Button>
                 </DialogActions>
             </Dialog>
-        </div >
+        </div>
     );
 }
 

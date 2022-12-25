@@ -17,7 +17,6 @@ import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
 
 function Teacher(props) {
-    const [count, setCount] = useState(0);
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const [locale, setLocale] = useState('ru');
     const [spisok, setSpisok] = useState([]);
@@ -33,7 +32,9 @@ function Teacher(props) {
     const NewSheduleButton = () => {
         if (props.newShedule) {
             return (
-                <IconButton>
+                <IconButton onClick={()=>{
+                    let newShedDate = dayjs(new Date().toDateString());          
+                    handleDateChange(newShedDate.add(7, 'day'))}}>
                     <NewReleases style={iconStyle} />
                 </IconButton>);
         }
@@ -72,7 +73,7 @@ function Teacher(props) {
             open: true,
             content: "Выберите пару, и я выведу вам свободные кабинеты во время этой пары.",
             ok: () => {
-                let val = document.querySelector("#teacherMain #infoAlert input").value;
+                let val = document.querySelector("#infoAlert input").value;
                 if (val != null && val.length == 1) {
                     axios.get(`http://localhost:5014/api/lastdance/searchEmptycabinet/${val}`)
                         .then((response) => {
@@ -242,7 +243,7 @@ function Teacher(props) {
     }
 
     return (
-        <div className="main" id="teacherMain">
+        <div onClick={() => props.back(false)} className="main" id="teacherMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
@@ -257,7 +258,7 @@ function Teacher(props) {
                     <TeacherSelect resetTeacher={resetTeacher} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleTeacherChange={handleTeacherChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton hidden className="settingsButton">
+                    <IconButton hidden className="settingsButton" onClick={(e)=>{props.back(true); e.stopPropagation();}}>
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -325,13 +326,22 @@ class TeacherSelect extends React.Component {
             currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
     }
+    favorite = { value: localStorage.getItem("favoriteTeacherValue"), viewWithRun: localStorage.getItem("favoriteTeacherChecked") };
 
     componentDidMount() {
         let doc = document.querySelector('#teacherMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
         axios.get(`http://localhost:5014/api/lastdance/getteacherslist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 this.setState({ list: response.data });
-
+                let indexRemove = response.data.indexOf(this.favorite.value);
+                if (this.favorite.value != null && indexRemove != -1) {
+                    response.data.unshift("☆" + this.favorite.value);
+                    response.data.splice(indexRemove+1, 1);
+                }
+                this.setState({ list: response.data });
+                if (this.favorite.viewWithRun === "true") {
+                    this.handleChange({ target: { value: "☆" + this.favorite.value } });
+                }
             }
         }).catch(err => {
             this.props.dialogActions({
@@ -355,8 +365,12 @@ class TeacherSelect extends React.Component {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
             axios.get(`http://localhost:5014/api/lastdance/getteacherslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
                 if (response.status === 200) {
+                    let indexRemove = response.data.indexOf(this.favorite.value);
+                    if (this.favorite.value != null && indexRemove != -1) {
+                        response.data.unshift("☆" + this.favorite.value);
+                        response.data.splice(indexRemove+1, 1);
+                    }
                     this.setState({ list: response.data });
-
                 }
             }).catch(err => {
                 this.props.dialogActions({
