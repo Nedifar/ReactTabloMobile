@@ -8,9 +8,7 @@ import Settings from './pages/Settings/Settings';
 function App() {
   return (
     <div className='App'>
-      <Routes>
-        <Route path="/" element={<SharePage/>}/>
-      </Routes>
+      <SharePage/>
     </div>
   );
 }

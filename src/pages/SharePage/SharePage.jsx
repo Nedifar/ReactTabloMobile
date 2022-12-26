@@ -12,13 +12,13 @@ import { useTheme } from "@emotion/react";
 import SwipeableViews from "react-swipeable-views";
 import Settings from "../Settings/Settings";
 
+const url = "http://192.168.147.51:81";
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} />
 })
 
 const SettingsTransition = React.forwardRef(function Transition(props, ref) {
     return <Slide unmountOnExit mountOnEnter direction="up" ref={ref} {...props} >
-        
     </Slide>
 })
 
@@ -46,7 +46,7 @@ function SharePage() {
     const [settingsOpen, setSettingsOpen] = useState(false);
 
     useEffect(() => {
-        axios.get("http://192.168.147.51:81/api/lastdance/getnes").then((response) => {
+        axios.get(url + "/api/lastdance/getnes").then((response) => {
             if (response.data == "есть новое расписание") {
                 setNewShedule(true);
             }
@@ -76,9 +76,13 @@ function SharePage() {
 
     return (
         <div className="mainShare">
-        <Slide className="slide" direction="left" in={settingsOpen} mountOnEnter unmountOnExit>
+            <div id="zaplatka" onClick={() => {
+                document.querySelector("#zaplatka").style = "z-index: 0";
+                setSettingsOpen(false);
+            }}></div>
+            <Slide className="slide" direction="left" in={settingsOpen} mountOnEnter unmountOnExit>
                 <div className="settings">
-                    <Settings backSettingsClick={setSettingsOpen}/>
+                    <Settings backSettingsClick={setSettingsOpen} />
                 </div>
             </Slide>
             <SwipeableViews
@@ -91,7 +95,7 @@ function SharePage() {
                 {cabinetState}
                 {teacherState}
             </SwipeableViews>
-            
+
             <BottomNavigation className="nav" value={navigationValue} onChange={(event, newValue) => {
                 setNavigationValue(newValue);
                 if (newValue == "group") {

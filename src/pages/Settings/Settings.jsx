@@ -5,6 +5,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "./settings.css"
 
+const url = "http://192.168.147.51:81";
+
 function Settings(props) {
     const [groupList, setGroupState] = useState([]);
     const [cabinetList, setCabinetState] = useState([]);
@@ -12,9 +14,9 @@ function Settings(props) {
     const [countGroup, setCountGroup] = useState(0);
     const [countCabinet, setCountCabinet] = useState(0);
     const [countTeacher, setCountTeacher] = useState(0);
-    const [groupSelectedValue, setGroupSelectedValue] = useState(localStorage.getItem("favoriteGroupValue"));
-    const [cabinetSelectedValue, setCabinetSelectedValue] = useState(localStorage.getItem("favoriteCabinetValue"));
-    const [teacherSelectedValue, setTeacherSelectedValue] = useState(localStorage.getItem("favoriteTeacherValue"));
+    const [groupSelectedValue, setGroupSelectedValue] = useState("");
+    const [cabinetSelectedValue, setCabinetSelectedValue] = useState("");
+    const [teacherSelectedValue, setTeacherSelectedValue] = useState("");
     const [groupSelectedChecked, setGroupSelectedChecked] = useState(localStorage.getItem("favoriteGroupChecked"));
     const [cabinetSelectedChecked, setCabinetSelectedChecked] = useState(localStorage.getItem("favoriteCabinetChecked"));
     const [teacherSelectedChecked, setTeacherSelectedChecked] = useState(localStorage.getItem("favoriteTeacherChecked"));
@@ -23,7 +25,7 @@ function Settings(props) {
         if (countGroup == 0) {
             let listResult = [];
             let currentDate = new Date();
-            axios.get(`http://localhost:5014/api/lastdance/getgrouplist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
+            axios.get(url + `/api/lastdance/getgrouplist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
                         listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
@@ -32,7 +34,7 @@ function Settings(props) {
                         })
                         setCountGroup(1);
                         setGroupState(listResult);
-
+                        setGroupSelectedValue(localStorage.getItem("favoriteGroupValue")?? "");
                     }
                 }).catch(() => {
                     this.props.dialogActions({
@@ -53,7 +55,7 @@ function Settings(props) {
         if (countCabinet == 0) {
             let listResult = [];
             let currentDate = new Date();
-            axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
+            axios.get(url + `/api/lastdance/getcabinetslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
                         listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
@@ -62,6 +64,7 @@ function Settings(props) {
                         })
                         setCountCabinet(1);
                         setCabinetState(listResult);
+                        setCabinetSelectedValue(localStorage.getItem("favoriteCabinetValue")?? "");
                     }
                 }).catch(() => {
                     this.props.dialogActions({
@@ -75,7 +78,6 @@ function Settings(props) {
                     });
                     this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
                 })
-
         }
     })
 
@@ -83,7 +85,7 @@ function Settings(props) {
         if (countTeacher == 0) {
             let listResult = [];
             let currentDate = new Date();
-            axios.get(`http://localhost:5014/api/lastdance/getteacherslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
+            axios.get(url + `/api/lastdance/getteacherslist?date=${currentDate.getMonth() + 1}.${currentDate.getDate()}.${currentDate.getFullYear()}`)
                 .then((response) => {
                     if (response.status === 200) {
                         listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
@@ -92,6 +94,7 @@ function Settings(props) {
                         })
                         setCountTeacher(1);
                         setTeacherState(listResult);
+                        setTeacherSelectedValue(localStorage.getItem("favoriteTeacherValue")?? "");
                     }
                 }).catch(() => {
                     this.props.dialogActions({
@@ -113,10 +116,10 @@ function Settings(props) {
             localStorage.setItem("favoriteGroupChecked", e);
             return;
         }
-        if(e.target.value == "Не выбрано"){
+        if (e.target.value == "Не выбрано") {
             localStorage.setItem("favoriteGroupChecked", false);
         }
-        setGroupSelectedValue( e.target.value );
+        setGroupSelectedValue(e.target.value);
         localStorage.setItem("favoriteGroupValue", e.target.value);
     }
 
@@ -125,10 +128,10 @@ function Settings(props) {
             localStorage.setItem("favoriteCabinetChecked", e);
             return;
         }
-        if(e.target.value == "Не выбрано"){
+        if (e.target.value == "Не выбрано") {
             localStorage.setItem("favoriteCabinetChecked", false);
         }
-        setCabinetSelectedValue( e.target.value );
+        setCabinetSelectedValue(e.target.value);
         localStorage.setItem("favoriteCabinetValue", e.target.value);
     }
 
@@ -137,10 +140,10 @@ function Settings(props) {
             localStorage.setItem("favoriteTeacherChecked", e);
             return;
         }
-        if(e.target.value == "Не выбрано"){
+        if (e.target.value == "Не выбрано") {
             localStorage.setItem("favoriteTeacherChecked", false);
         }
-        setTeacherSelectedValue( e.target.value );
+        setTeacherSelectedValue(e.target.value);
         localStorage.setItem("favoriteTeacherValue", e.target.value);
     }
 
@@ -152,7 +155,7 @@ function Settings(props) {
     return (
         <div className="mainSettings">
             <div className="settingsHeader">
-                <IconButton onClick={()=>props.backSettingsClick(false)}>
+                <IconButton onClick={() => props.backSettingsClick(false)}>
                     <ArrowBack />
                 </IconButton>
                 <div>
@@ -171,7 +174,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox haveValue={groupSelectedValue==null || groupSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleGroupSelectedChange} onChange={setGroupSelectedChecked} checked={groupSelectedChecked === "true"} className="checkByRun" />
+                        <MyCheckBox haveValue={groupSelectedValue == "" || groupSelectedValue == "Не выбрано" ? true : false} setLocalStorage={handleGroupSelectedChange} onChange={setGroupSelectedChecked} checked={groupSelectedChecked === "true"} className="checkByRun" />
                     </div>
                 </div>
             </div>
@@ -187,7 +190,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox haveValue={cabinetSelectedValue==null|| cabinetSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleCabinetSelectedChange} onChange={setCabinetSelectedChecked} className="checkByRun" checked={cabinetSelectedChecked === "true"} />
+                        <MyCheckBox haveValue={cabinetSelectedValue == "" || cabinetSelectedValue == "Не выбрано" ? true : false} setLocalStorage={handleCabinetSelectedChange} onChange={setCabinetSelectedChecked} className="checkByRun" checked={cabinetSelectedChecked === "true"} />
                     </div>
                 </div>
             </div>
@@ -203,7 +206,7 @@ function Settings(props) {
                         </Select>
                     </div>
                     <div>
-                        <MyCheckBox haveValue={teacherSelectedValue==null || teacherSelectedValue=="Не выбрано"?true:false} setLocalStorage={handleTeacherSelectedChange} onChange={setTeacherSelectedChecked} checked={teacherSelectedChecked === "true"} />
+                        <MyCheckBox haveValue={teacherSelectedValue == "" || teacherSelectedValue == "Не выбрано" ? true : false} setLocalStorage={handleTeacherSelectedChange} onChange={setTeacherSelectedChecked} checked={teacherSelectedChecked === "true"} />
                     </div>
                 </div>
             </div>

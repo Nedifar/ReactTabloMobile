@@ -16,6 +16,8 @@ import axios from 'axios'
 import DateFormat from "./components/DateFormat";
 import ReloadCat from "./components/reloadcat.gif"
 
+const url = "http://192.168.147.51:81";
+
 function Cabinet(props) {
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const [locale, setLocale] = useState('ru');
@@ -75,7 +77,7 @@ function Cabinet(props) {
             ok: () => {
                 let val = document.querySelector("#infoAlert input").value;
                 if (val != null && val.length == 1) {
-                    axios.get(`http://localhost:5014/api/lastdance/searchEmptycabinet/${val}`)
+                    axios.get(url + `/api/lastdance/searchEmptycabinet/${val}`)
                         .then((response) => {
                             if (response.status === 200) {
                                 props.emptyCabinetDialog({ open: false });
@@ -126,8 +128,8 @@ function Cabinet(props) {
         let itemsShedule = document.querySelectorAll('#cabinetMain .shedule *:not(img)')
         img.style = "opacity: 1; z-index: 3";
         handleCabinetChange([]);
-        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
+        let doc = document.querySelector('#cabinetMain .dateBlock input').value.split('.');
+        axios.get(url + `/api/lastdance/getcabinetmobile?cabinet=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);
@@ -241,7 +243,7 @@ function Cabinet(props) {
     }
 
     return (
-        <div onClick={() => props.back(false)} className="main" id="cabinetMain">
+        <div className="main" id="cabinetMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
@@ -256,7 +258,10 @@ function Cabinet(props) {
                     <CabinetSelect resetCabinet={resetCabinet} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleCabinetChange={handleCabinetChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton hidden className="settingsButton" onClick={(e)=>{props.back(true); e.stopPropagation();}}>
+                    <IconButton hidden className="settingsButton" onClick={(e)=>{
+                        props.back(true); 
+                        document.querySelector("#zaplatka").style="z-index: 2";
+                        e.stopPropagation();}}>
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -327,8 +332,8 @@ class CabinetSelect extends React.Component {
     favorite = { value: localStorage.getItem("favoriteCabinetValue"), viewWithRun: localStorage.getItem("favoriteCabinetChecked") };
 
     componentDidMount() {
-        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
-        axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${this.state.currentDate}`).then((response) => {
+        let doc = document.querySelector('#cabinetMain .dateBlock input')?.value.split('.');
+        axios.get(url + `/api/lastdance/getcabinetslist?date=${this.state.currentDate}`).then((response) => {
             if (response.status === 200) {
                 let indexRemove = response.data.indexOf(this.favorite.value);
                 if (this.favorite.value != null && indexRemove != -1) {
@@ -356,10 +361,10 @@ class CabinetSelect extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .dateBlock input')?.value.split('.');
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
-            axios.get(`http://localhost:5014/api/lastdance/getcabinetslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
+            axios.get( url + `/api/lastdance/getcabinetslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
                 if (response.status === 200) {
                     let indexRemove = response.data.indexOf(this.favorite.value);
                     if (this.favorite.value != null && indexRemove != -1) {
@@ -393,9 +398,9 @@ class CabinetSelect extends React.Component {
         let shed = document.querySelector("#cabinetMain .shedule");
         img.style = "opacity: 1; z-index: 3";
         shed.style = "overflow: hidden";
-        let doc = document.querySelector('#cabinetMain .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input').value.split('.');
+        let doc = document.querySelector('#cabinetMain .dateBlock input').value.split('.');
         this.props.handleCabinetChange([]);
-        axios.get(`http://localhost:5014/api/lastdance/getcabinetmobile?cabinet=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        axios.get(url + `/api/lastdance/getcabinetmobile?cabinet=${e.target.value}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);

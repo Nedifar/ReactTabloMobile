@@ -1,69 +1,74 @@
-.mainShare{
-height: 100vh;
-width: 100%;
-}
-.nav{
-width: 100%;
-position: absolute;
-bottom: 0;
+.mainShare {
+    height: 100vh;
+    width: 100%;
 }
 
-body > #root + div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+.nav {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+body>#root+div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
     background-color: transparent !important;
 }
-body > #root + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+
+body>#root+div[role="presentation"] .MuiDialogActions-spacing {
     color: #F4C7C7 !important;
     background-color: #160B0B !important;
     margin-top: -2px;
 }
 
-body > #root + div + div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+body>#root+div+div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
     background-color: transparent !important;
 }
-body > #root + div + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+
+body>#root+div+div[role="presentation"] .MuiDialogActions-spacing {
     color: #F4C7C7 !important;
     background-color: #160B0B !important;
     margin-top: -2px;
 }
-body > #root + div + div[role="presentation"] label{
+
+body>#root+div+div[role="presentation"] label {
     color: #F4C7C7;
 }
 
-body > #root + div + div[role="presentation"] label + div{
+body>#root+div+div[role="presentation"] label+div {
     border-bottom: 2px solid #F4C7C7;
     color: #F4C7C7;
 }
 
-body > #root + div +div +div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper{
+body>#root+div+div+div[role="presentation"] .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
     background-color: transparent !important;
 }
-body > #root + div + div + div[role="presentation"] .css-hlj6pa-MuiDialogActions-root{
+
+body>#root+div+div+div[role="presentation"] .MuiDialogActions-spacing {
     color: #F4C7C7 !important;
     background-color: #160B0B !important;
     margin-top: -2px;
 }
 
-body > #root + div + div[role="presentation"] .css-1a1fmpi-MuiInputBase-root-MuiInput-root:after{
+body>#root+div+div[role="presentation"] .css-1a1fmpi-MuiInputBase-root-MuiInput-root:after {
     bottom: -2.1px;
     left: -0.3px;
     right: -0.3px;
-
 }
 
-body > #root + div + div[role="presentation"] input{
+body>#root+div+div[role="presentation"] input {
     color: #F4C7C7;
 }
 
-.divContainerForPages{
-    width: 100%;
-    height: 100%;
-}
-.react-swipeable-view-container{
+.divContainerForPages {
     width: 100%;
     height: 100%;
 }
 
-.settings{
+.react-swipeable-view-container {
+    width: 100%;
+    height: 100%;
+}
+
+.settings {
     height: 100%;
     width: 100%;
 }
@@ -74,4 +79,13 @@ body > #root + div + div[role="presentation"] input{
     right: 1px;
     width: 100%;
     z-index: 5;
+    opacity: 1 !important;
+}
+
+#zaplatka {
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+    position: absolute;
 }
