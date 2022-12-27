@@ -147,9 +147,8 @@
 }
 
 .shedule {
-    height: 93%;
+    height: 100%;
     overflow: scroll;
-
 }
 
 .shedule::-webkit-scrollbar {

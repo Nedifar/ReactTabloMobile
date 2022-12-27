@@ -366,7 +366,6 @@ class TeacherSelect extends React.Component {
     componentDidUpdate(prevProps, prevState) {
 
         let doc = document.querySelector('#teacherMain .dateBlock input')?.value.split('.');
-        if(doc == undefined) return;
         if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
             this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
             axios.get(url + `/api/lastdance/getteacherslist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {

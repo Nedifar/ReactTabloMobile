@@ -155,7 +155,8 @@ function Settings(props) {
     return (
         <div className="mainSettings">
             <div className="settingsHeader">
-                <IconButton onClick={() => props.backSettingsClick(false)}>
+                <IconButton onClick={() => { document.querySelector("#zaplatka").style = "z-index: 0";
+                props.backSettingsClick(false)}}>
                     <ArrowBack />
                 </IconButton>
                 <div>
