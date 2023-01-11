@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Button from '@mui/material/Button'
 import "./groupstyle.css"
-import { Alert, AlertTitle, Dialog, DialogActions, DialogContent, Grow, IconButton, List, Slide, Snackbar, TextField } from "@mui/material";
-import { DoorBackOutlined, SettingsAccessibility, Sledding } from "@mui/icons-material";
+import { IconButton, TextField, Select, MenuItem } from "@mui/material";
+import { DoorBackOutlined, } from "@mui/icons-material";
 import NewReleases from "@mui/icons-material/NewReleasesOutlined";
-import { Select } from "@mui/material";
-import { MenuItem } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -14,13 +11,14 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import axios from 'axios'
 import DateFormat from "./components/DateFormat";
-import ReloadCat from "./components/reloadcat.gif"
+import ReloadCat from "../../shareResources/reloadcat.gif"
+//import  from "/"
 
 const url = "http://192.168.147.51:81";
 
 function Group(props) {
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
-    const [locale, setLocale] = useState('ru');
+    const locale = 'ru';
     const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
@@ -36,7 +34,8 @@ function Group(props) {
             return (
                 <IconButton onClick={() => {
                     let newShedDate = dayjs(new Date().toDateString());
-                    handleDateChange(newShedDate.add(7, 'day'))}}>
+                    handleDateChange(newShedDate.add(7, 'day'))
+                }}>
                     <NewReleases style={iconStyle} />
                 </IconButton>);
         }
@@ -180,51 +179,48 @@ function Group(props) {
     };
 
     const getWeekBlocks = (dayWeeks) => {
-        let content = [];
         let counter = 0;
-        dayWeeks.forEach(element => {
-            content.push(
-                <div className="buttonDayWeekContainer" key={element.dayWeekName}>
-                    <button type="button" onClick={expander} className="dayWeekContainer">
+        return dayWeeks.map(element => {
+            <div className="buttonDayWeekContainer" key={element.dayWeekName}>
+                <button type="button" onClick={expander} className="dayWeekContainer">
+                    <div>
+
+                    </div>
+                    <div>
+                        <div>
+                            <p>{dateFormat.addDays(counter).getDate()}</p>
+                            <span>{dateFormat.getMonth(dateFormat.addDays(counter))}</span>
+                        </div>
                         <div>
 
                         </div>
                         <div>
-                            <div>
-                                <p>{dateFormat.addDays(counter).getDate()}</p>
-                                <span>{dateFormat.getMonth(dateFormat.addDays(counter))}</span>
-                            </div>
-                            <div>
-
-                            </div>
-                            <div>
-                                {element.dayWeekName}
-                            </div>
+                            {element.dayWeekName}
                         </div>
-                    </button>
-                    <div className="dayWeekContent">
-                        <div></div>
+                    </div>
+                </button>
+                <div className="dayWeekContent">
+                    <div>
+
+                    </div>
+                    <div>
                         <div>
-                            <div></div>
-                            <div>
 
-                            </div>
-                            <div className="intoDayWeekContent">
-                                <p>
-                                    SHEDULE
-                                </p>
+                        </div>
+                        <div>
 
-                                {getLessonBlock(element.dayWeekClasses)}
-                            </div>
-
+                        </div>
+                        <div className="intoDayWeekContent">
+                            <p>
+                                SHEDULE
+                            </p>
+                            {getLessonBlock(element.dayWeekClasses)}
                         </div>
                     </div>
                 </div>
-
-            );
+            </div>
             counter++;
         });
-        return content;
     };
 
     const getLessonBlock = (lessons) => {
@@ -239,12 +235,11 @@ function Group(props) {
                 </div>);
         });
         return lessonBlocks;
-
     }
 
     return (
-        <div 
-             className="main" id="groupMain">
+        <div
+            className="main" id="groupMain">
             <div className="headerGrid">
                 <div className="leftIconsBlock">
                     <IconButton onClick={handleSearchEmptyCabinet}>
@@ -256,13 +251,14 @@ function Group(props) {
                     <span>
                         .NEDIFAR
                     </span>
-                    <GroupSelect resetGroup={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleGroupChange={handleGroupChange} />
+                    <GroupSelect reset={resetGroup} setOOpen={props.handleErrorDialog} dialogActions={props.handleDialogActions} handleSelectorChange={handleGroupChange} />
                 </div>
                 <div className="rightItemsBlock">
-                    <IconButton hidden className="settingsButton" onClick={(e) => { 
-                        props.back(true); 
-                        document.querySelector("#zaplatka").style="z-index: 2";
-                        e.stopPropagation(); }}>
+                    <IconButton hidden className="settingsButton" onClick={(e) => {
+                        props.back(true);
+                        document.querySelector("#zaplatka").style = "z-index: 2";
+                        e.stopPropagation();
+                    }}>
                         <Settings style={{ fontSize: 35 }} />
                     </IconButton>
                 </div>
@@ -321,121 +317,5 @@ function expander(e) {
         content.style.maxHeight = content.scrollHeight + "px";
     }
 }
-
-class GroupSelect extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            list: [""],
-            group: "",
-            currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
-        };
-    }
-    favorite = { value: localStorage.getItem("favoriteGroupValue"), viewWithRun: localStorage.getItem("favoriteGroupChecked") };
-
-    componentDidMount() {
-        let doc = document.querySelector('#groupMain .dateBlock input')?.value.split('.');
-        axios.get(url + `/api/lastdance/getgrouplist?date=${this.state.currentDate}`).then((response) => {
-            if (response.status === 200) {
-                let indexRemove = response.data.indexOf(this.favorite.value);
-                if (this.favorite.value != null && indexRemove != -1) {
-                    response.data.unshift("☆" + this.favorite.value);
-                    response.data.splice(indexRemove+1, 1);
-                }
-                this.setState({ list: response.data });
-                if (this.favorite.viewWithRun === "true") {
-                    this.handleChange({ target: { value: "☆" + this.favorite.value } });
-                }
-            }
-        }).catch(err => {
-            this.props.dialogActions({
-                ok: () => {
-                    this.props.setOOpen({ open: false });
-                    this.componentDidMount();
-                },
-                cancel: () => {
-                    this.props.setOOpen({ open: false });
-                }
-            });
-            this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
-            console.log("err")
-        })
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        let doc = document.querySelector('#groupMain .dateBlock input')?.value.split('.');
-        if (`${doc[1]}.${doc[0]}.${doc[2]}` !== this.state.currentDate) {
-            this.setState({ currentDate: `${doc[1]}.${doc[0]}.${doc[2]}` });
-            axios.get(url + `/api/lastdance/getgrouplist?date=${doc[1]}.${doc[0]}.${doc[2]}`).then((response) => {
-                if (response.status === 200) {
-                    let indexRemove = response.data.indexOf(this.favorite.value);
-                    if (this.favorite.value != null && indexRemove != -1) {
-                        response.data.unshift("☆" + this.favorite.value);
-                        response.data.splice(indexRemove+1, 1);
-                    }
-                    this.setState({ list: response.data });
-                }
-            }).catch(err => {
-                this.props.dialogActions({
-                    ok: () => {
-                        this.props.setOOpen({ open: false });
-                        this.componentDidMount();
-                    },
-                    cancel: () => {
-                        this.props.setOOpen({ open: false });
-                    }
-                });
-                this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
-                console.log("err")
-            })
-        }
-        if (prevProps.resetGroup) {
-            this.handleChange({ target: "" });
-        }
-    }
-
-    handleChange = (e) => {
-        let img = document.querySelector('#groupMain .reloadCat');
-        let itemsShedule = document.querySelectorAll('#groupMain .shedule *:not(img)')
-        let shed = document.querySelector("#groupMain .shedule");
-        img.style = "opacity: 1; z-index: 3";
-        shed.style = "overflow: hidden";
-        let doc = document.querySelector('#groupMain .dateBlock input').value.split('.');
-        this.props.handleGroupChange([]);
-        axios.get(url + `/api/lastdance/getgroupmobile?group=${e.target.value.replace('☆', '')}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
-            .then((response) => {
-                if (response.status === 200) {
-                    console.log(response.data);
-                    this.props.handleGroupChange(response.data);
-                    this.setState({ group: e.target.value, })
-                }
-            }).catch(err => {
-            })
-        setTimeout(() => {
-            img.style = "opacity: 0; z-index: 1";
-            itemsShedule = document.querySelectorAll('#groupMain .shedule > *:not(img)');
-            itemsShedule.forEach(element => {
-                element.style = "";
-            });
-            shed.style = "overflow: scroll";
-        }, 3000);
-    }
-
-    selectItem() {
-        let listMenuItems = []
-        this.state.list.forEach(element => {
-            listMenuItems.push(<MenuItem value={element} key={element}>{element}</MenuItem>);
-        });
-        return listMenuItems;
-    }
-    render() {
-        return (
-            <Select variant="standard" value={this.state.group} onChange={this.handleChange} IconComponent={undefined} className="groupSelect" >
-                {this.selectItem()}
-            </Select>
-        );
-    }
-}
-
 
 export default Group;
