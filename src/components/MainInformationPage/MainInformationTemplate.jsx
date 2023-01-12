@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./groupstyle.css"
-import { IconButton, TextField, Select, MenuItem } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { DoorBackOutlined, } from "@mui/icons-material";
-import NewReleases from "@mui/icons-material/NewReleasesOutlined";
 import { Settings } from "@mui/icons-material";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -11,39 +10,22 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/ru'
 import axios from 'axios'
 import DateFormat from "./components/DateFormat";
-import ReloadCat from "../../images/reloadcat.gif"
 import CustomSelcet from "../../components/UI/CustomSelect/CustomSelect"
-//import  from "/"
+import NewSheduleButton from "./NewSheduleButton";
 
 const url = "http://192.168.147.51:81";
 
-function Group(props) {
+function MainInformationTemplate(props) {
     const [value, setValue] = useState(dayjs(new Date().toDateString()));
     const locale = 'ru';
-    const [spisok, setSpisok] = useState([]);
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
     const [resetGroup, setResetGroup] = useState(false);
     const iconStyle = { fontSize: 45 }
 
-    const handleGroupChange = (dayWeeks) => {
+    const handleGroupChange = (dayWeeks) => { //!!!!!!!!!!
         setSpisok(getWeekBlocks(dayWeeks));
     }
-
-    const NewSheduleButton = () => {
-        if (props.newShedule) {
-            return (
-                <IconButton onClick={() => {
-                    let newShedDate = dayjs(new Date().toDateString());
-                    handleDateChange(newShedDate.add(7, 'day'))
-                }}>
-                    <NewReleases style={iconStyle} />
-                </IconButton>);
-        }
-        else {
-            return null;
-        }
-    };
 
     useEffect(() => {
         let list = document.querySelectorAll('#groupMain p[data-type="Day"]')
@@ -179,51 +161,6 @@ function Group(props) {
         }, 3000);
     };
 
-    const getWeekBlocks = (dayWeeks) => {
-        let counter = 0;
-        return dayWeeks.map(element => {
-            <div className="buttonDayWeekContainer" key={element.dayWeekName}>
-                <button type="button" onClick={expander} className="dayWeekContainer">
-                    <div>
-
-                    </div>
-                    <div>
-                        <div>
-                            <p>{dateFormat.addDays(counter).getDate()}</p>
-                            <span>{dateFormat.getMonth(dateFormat.addDays(counter))}</span>
-                        </div>
-                        <div>
-
-                        </div>
-                        <div>
-                            {element.dayWeekName}
-                        </div>
-                    </div>
-                </button>
-                <div className="dayWeekContent">
-                    <div>
-
-                    </div>
-                    <div>
-                        <div>
-
-                        </div>
-                        <div>
-
-                        </div>
-                        <div className="intoDayWeekContent">
-                            <p>
-                                SHEDULE
-                            </p>
-                            {getLessonBlock(element.dayWeekClasses)}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            counter++;
-        });
-    };
-
     const getLessonBlock = (lessons) => {
         let lessonBlocks = [];
         let counter = 0;
@@ -246,7 +183,7 @@ function Group(props) {
                     <IconButton onClick={handleSearchEmptyCabinet}>
                         <DoorBackOutlined style={iconStyle} />
                     </IconButton>
-                    <NewSheduleButton />
+                    <NewSheduleButton handleDateChange={handleDateChange} newShedule={props.newShedule} />
                 </div>
                 <div className="headerCenterBlock">
                     <span>
@@ -298,19 +235,12 @@ function Group(props) {
                     </MobileDatePicker>
                 </LocalizationProvider>
             </div>
-            <div className="shedule">
-                <p>LastDance</p>
-                <div className="contLessonsBlock">
-                    {spisok}
-                </div>
-                <img className="reloadCat" src={ReloadCat}></img>
-            </div>
-
+            <SheduleBlock/>
         </div>
     );
 }
 
-function expander(e) {
+function handleOpenDayWeekContainer(e) {
     var content = e.currentTarget.nextElementSibling;
     if (content.style.maxHeight) {
         content.style.maxHeight = null;
@@ -319,4 +249,4 @@ function expander(e) {
     }
 }
 
-export default Group;
+export default MainInformationTemplate;
