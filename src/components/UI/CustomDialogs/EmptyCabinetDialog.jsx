@@ -20,28 +20,28 @@ function EmptyCabinetDialog(props) {
         <Dialog
             keepMounted
             TransitionComponent={mainPageContainer.UpSliderTransition}
-            open={mainPageContainer.open}
+            open={mainPageContainer.cabinetSelectDialog.open}
             onClose={handleCloseCabinetSelectDialog}
             className="error">
             <Alert severity="info" className="errorAlert" id="infoAlert">
                 <AlertTitle>
                     Информация
                 </AlertTitle>
-                <p>{mainPageContainer.content}</p>
+                <p>{mainPageContainer.cabinetSelectDialog.content}</p>
                 <TextField
                     autoFocus
                     label="Номер пары"
                     fullWidth
                     type="number"
                     variant="standard"
-                    onChange={handleCabinetTextFieldChanged(e)}
+                    onChange={handleCabinetTextFieldChanged}
                 />
             </Alert>
             <DialogActions>
-                <Button className="alertBtn" onClick={mainPageContainer.ok}>
+                <Button className="alertBtn" onClick={mainPageContainer.cabinetSelectDialog.ok}>
                     Ok
                 </Button>
-                <Button className="alertBtn" onClick={mainPageContainer.cancel}>
+                <Button className="alertBtn" onClick={mainPageContainer.cabinetSelectDialog.cancel}>
                     Отмена
                 </Button>
             </DialogActions>

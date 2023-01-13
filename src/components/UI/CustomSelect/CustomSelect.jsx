@@ -1,5 +1,7 @@
+import { MenuItem, Select } from '@mui/material';
 import axios from 'axios';
 import React from 'react'
+import "./CustomSelect.css"
 
 class CustomSelect extends React.Component { //props nameComponent
     constructor(props) {
@@ -9,14 +11,18 @@ class CustomSelect extends React.Component { //props nameComponent
             selectValue: "",
             currentDate: (+(new Date().getMonth()) + 1) + "." + new Date().getDate() + "." + new Date().getFullYear()
         };
+        this.url = props.url;
+        let upperNameComp = this.props.nameComponent.toUpperCase();
+        this.targetUp = upperNameComp[0] + this.props.nameComponent.slice(1);
     }
-    favorite = { value: localStorage.getItem(`${this.props.nameComponent}FavoriteValue`), viewWithRun: localStorage.getItem(`${this.props.nameComponent}FavoriteChecked`) }; //groupFavoriteValue
+    favorite = { value: localStorage.getItem(`favorite${this.targetUp}Value`), viewWithRun: localStorage.getItem(`favorite${this.targetUp}Checked`) }; //groupFavoriteValue
 
     componentDidMount() {
         loadSelectData(this.props.nameComponent, this);
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if(prevState.currentDate !== this.state.currentDate)
         loadSelectData(this.props.nameComponent, this);
         if (prevProps.reset) {
             this.handleChange({ target: "" });
@@ -30,16 +36,25 @@ class CustomSelect extends React.Component { //props nameComponent
         img.style = `opacity: 1; z-index: 3`;
         shed.style = "overflow: hidden";
         let doc = document.querySelector(`#${this.props.nameComponent}Main .dateBlock input`).value.split('.');
-        this.props.handleSelectorChange([]);
-        axios.get(url + `/api/lastdance/get${this.props.nameComponent}mobile?${this.props.nameComponent}=${e.target.value.replace('☆', '')}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
+        axios.get(this.url + `/api/lastdance/get${this.props.nameComponent}mobile?${this.props.nameComponent}=${e.target.value.replace('☆', '')}&Date=${doc[1]}.${doc[0]}.${doc[2]}`)
             .then((response) => {
                 if (response.status === 200) {
+                    this.props.handleSelectorChange([]);
                     console.log(response.data);
                     this.props.handleSelectorChange(response.data);
                     this.setState({ selectValue: e.target.value, })
                 }
             }).catch(err => {
-
+                this.props.dialogActions({
+                    ok: () => {
+                        this.props.setOOpen({ open: false });
+                        this.handleChange(e);
+                    },
+                    cancel: () => {
+                        this.props.setOOpen({ open: false });
+                    }
+                });
+                setTimeout(()=>this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" }), 3000);
             })
 
         setTimeout(() => {
@@ -54,7 +69,7 @@ class CustomSelect extends React.Component { //props nameComponent
 
     selectItem() {
         return this.state.list.map(element => {
-            <MenuItem value={element} key={element}>{element}</MenuItem>;
+            return <MenuItem value={element} key={element}>{element}</MenuItem>;
         });
     }
 
@@ -72,8 +87,7 @@ class CustomSelect extends React.Component { //props nameComponent
 }
 
 function loadSelectData(nameComponent, select) {
-    let doc = document.querySelector(`#${nameComponent}Main .dateBlock input`)?.value.split('.');
-    axios.get(url + `/api/lastdance/get${nameComponent}slist?date=${select.state.currentDate}`).then((response) => { //переделай запрос с getgrouplist на getgroupslist.
+    axios.get(select.url + `/api/lastdance/get${nameComponent}slist?date=${select.state.currentDate}`).then((response) => { //переделай запрос с getgrouplist на getgroupslist.
         if (response.status === 200) {
             let indexRemove = response.data.indexOf(select.favorite.value);
             if (select.favorite.value != null && indexRemove != -1) {

@@ -1,4 +1,5 @@
 import DateFormat from "../../../lib/DateFormat"
+import "./sheduleblock.css"
 
 function WeekBlock(props) {
     return (
@@ -9,8 +10,8 @@ function WeekBlock(props) {
                 </div>
                 <div>
                     <div>
-                        <p>{dateFormat.addDays(props.counter).getDate()}</p>
-                        <span>{dateFormat.getMonth(DateFormat.addDays(props.counter))}</span>
+                        <p>{props.dateFormat.addDays(props.counter).getDate()}</p>
+                        <span>{props.dateFormat.getMonth(props.dateFormat.addDays(props.counter))}</span>
                     </div>
                     <div>
 

@@ -1,4 +1,6 @@
-function InfoDialog() {
+import { Alert, AlertTitle, Button, Dialog, DialogActions } from "@mui/material";
+
+function InfoDialog(props) {
     const mainPageContainer = props.mainPageContainer;
 
     const handleOkDialogClick = () => {
@@ -8,7 +10,7 @@ function InfoDialog() {
     const handleCloseDialog = () => {
         mainPageContainer.setInfoDialog({ open: false })
     }
-
+return(
     <Dialog
         keepMounted
         TransitionComponent={mainPageContainer.UpSliderTransition}
@@ -19,14 +21,14 @@ function InfoDialog() {
             <AlertTitle>
                 Информация
             </AlertTitle>
-            {infoDialog.content}
+            {mainPageContainer.infoDialog.content}
         </Alert>
         <DialogActions>
             <Button className="alertBtn" onClick={handleOkDialogClick}>
                 Ok
             </Button>
         </DialogActions>
-    </Dialog>
+    </Dialog>);
 }
 
 export default InfoDialog;

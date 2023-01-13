@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import ReloadCat from "../../../images/reloadcat.gif"
+import "./sheduleblock.css"
 
 function SheduleBlock(props) {
 
     useEffect(() => {
-        let list = document.querySelectorAll('#groupMain p[data-type="Day"]')
+        let list = document.querySelectorAll(`#${props.target}Main p[data-type="Day"]`)
         list.forEach(element => {
             element.innerHTML = element.firstChild?.data.replace('\n', '<br>');
             if (element.innerHTML == "undefined") {
@@ -11,8 +13,8 @@ function SheduleBlock(props) {
             }
         });
 
-        let listBlocksForColors = document.querySelectorAll('#groupMain .dayWeekContainer > div:first-child');
-        let listBlocksForColors1 = document.querySelectorAll('#groupMain .dayWeekContent > div:first-child');
+        let listBlocksForColors = document.querySelectorAll(`#${props.target}Main .dayWeekContainer > div:first-child`);
+        let listBlocksForColors1 = document.querySelectorAll(`#${props.target}Main .dayWeekContent > div:first-child`);
         let colors = ["#B96CBD", "#49A24D", "#FDA838", "#F75355", "#00C6AE", "#455399"];
         let counterColor = 0;
         for (let i = 0; i < listBlocksForColors.length; i++) {

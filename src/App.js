@@ -1,10 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
-import Group from './pages/Group/Group'
-import { Routes, Route, Link } from 'react-router-dom';
 import MainPageContainer from './components/MainPageContainer/MainPageContainer';
-import Settings from './pages/Settings/Settings';
-import React from 'react';
+import React, { Fragment } from 'react';
 
 class App extends React.Component {
   render() {
