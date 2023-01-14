@@ -52,7 +52,7 @@ function MainInformationTemplate(props) {
                                 let result = [];
                                 result.push(<p>Список свободных кабинетов во время {val} пары</p>)
                                 response.data.forEach(element => {
-                                    result.push(<p>{element}</p>);
+                                    result.push(<p key={element}>{element}</p>);
                                 }
                                 );
                                 props.infoDialog({
@@ -105,7 +105,7 @@ function MainInformationTemplate(props) {
         let itemsShedule = document.querySelectorAll(`#${props.target}Main .shedule *:not(img)`)
         img.style = "opacity: 1; z-index: 3";
         handleGroupChange([]);
-        axios.get(props.url + `/api/lastdance/getgroupmobile?group=${val.value}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
+        axios.get(props.url + `/api/lastdance/getgroupmobile?group=${val.value.replace('☆', '')}&Date=${+newValue.month() + 1}.${newValue.date()}.${newValue.year()}`)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data);

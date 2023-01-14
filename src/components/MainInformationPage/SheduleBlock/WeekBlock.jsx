@@ -60,7 +60,7 @@ function WeekBlock(props) {
                         {element.number}
                     </p>
                     <p data-type="Day" data-typedata={element.Day}>
-                        {element.day.replace('\n', "<br>")}
+                        {element.day.replace('\n', "<br>").replace('\n', "<br>").replace('\n', "<br>")}
                     </p>
                     <p>
                         {element.beginMobile}-{element.endMobile}

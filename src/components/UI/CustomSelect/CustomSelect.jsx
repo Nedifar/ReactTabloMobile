@@ -13,17 +13,18 @@ class CustomSelect extends React.Component { //props nameComponent
         };
         this.url = props.url;
         let upperNameComp = this.props.nameComponent.toUpperCase();
-        this.targetUp = upperNameComp[0] + this.props.nameComponent.slice(1);
+        let targetUp = upperNameComp[0] + this.props.nameComponent.slice(1);
+        this.favorite = { value: localStorage.getItem(`favorite${targetUp}Value`), viewWithRun: localStorage.getItem(`favorite${targetUp}Checked`) };
     }
-    favorite = { value: localStorage.getItem(`favorite${this.targetUp}Value`), viewWithRun: localStorage.getItem(`favorite${this.targetUp}Checked`) }; //groupFavoriteValue
+
 
     componentDidMount() {
         loadSelectData(this.props.nameComponent, this);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState.currentDate !== this.state.currentDate)
-        loadSelectData(this.props.nameComponent, this);
+        if (prevState.currentDate !== this.state.currentDate)
+            loadSelectData(this.props.nameComponent, this);
         if (prevProps.reset) {
             this.handleChange({ target: "" });
         }
@@ -54,7 +55,7 @@ class CustomSelect extends React.Component { //props nameComponent
                         this.props.setOOpen({ open: false });
                     }
                 });
-                setTimeout(()=>this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" }), 3000);
+                setTimeout(() => this.props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" }), 3000);
             })
 
         setTimeout(() => {

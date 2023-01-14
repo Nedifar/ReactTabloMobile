@@ -1,6 +1,6 @@
 import { Slide } from "@mui/material";
 import axios from "axios";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./mainpagecontainer.css"
 import { useTheme } from "@emotion/react";
 import SwipeableViews from "react-swipeable-views";

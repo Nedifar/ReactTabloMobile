@@ -29,11 +29,11 @@ body>#root+div+div[role="presentation"] .MuiDialogActions-spacing {
     margin-top: -2px;
 }
 
-body>#root+div+div[role="presentation"] label {
+body>#root+div+div+div[role="presentation"] label {
     color: #F4C7C7;
 }
 
-body>#root+div+div[role="presentation"] label+div {
+body>#root+div+div+div[role="presentation"] label+div {
     border-bottom: 2px solid #F4C7C7;
     color: #F4C7C7;
 }
@@ -48,14 +48,20 @@ body>#root+div+div+div[role="presentation"] .MuiDialogActions-spacing {
     margin-top: -2px;
 }
 
-body>#root+div+div[role="presentation"] .css-1a1fmpi-MuiInputBase-root-MuiInput-root:after {
+body>#root+div+div+div[role="presentation"] .MuiInputBase-formControl:after {
     bottom: -2.1px;
-    left: -0.3px;
-    right: -0.3px;
+    left: -0.1px;
+    right: -0.1px;
 }
 
-body>#root+div+div[role="presentation"] input {
+body>#root+div+div+div[role="presentation"] input {
     color: #F4C7C7;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 .divContainerForPages {
@@ -90,4 +96,9 @@ body>#root+div+div[role="presentation"] input {
     height: 100vh;
     z-index: 0;
     position: absolute;
+}
+
+.errorAlert{
+    color: #F4C7C7 !important;
+    background-color: #160B0B !important;
 }

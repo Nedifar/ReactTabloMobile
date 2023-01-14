@@ -1,6 +1,6 @@
 import './App.css';
 import MainPageContainer from './components/MainPageContainer/MainPageContainer';
-import React, { Fragment } from 'react';
+import React from 'react';
 
 class App extends React.Component {
   render() {
