@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ComponentSettings from "./ComponentSettings";
 import "./settings.css"
 
-const url = "http://192.168.147.51:81";
+const url = process.env.REACT_APP_API_LOCAL || window.location.origin + '/infotabloserver';
 
 function Settings(props) {
     const [groupList, setGroupState] = useState([]);
@@ -49,6 +49,7 @@ function Settings(props) {
                         }
                     });
                     props.setOOpen({ open: true, text: "Ошибка подключения, вы хотите повторить?" });
+                    
                 })
         }
 

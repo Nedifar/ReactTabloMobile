@@ -1,6 +1,6 @@
 import { Slide } from "@mui/material";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import "./mainpagecontainer.css"
 import { useTheme } from "@emotion/react";
 import SwipeableViews from "react-swipeable-views";
@@ -84,6 +84,7 @@ return (
                 <Settings backSettingsClick={setSettingsOpen} />
             </div>
         </Slide>
+        <Suspense fallback={<div>load</div>}>
         <SwipeableViews
             axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
             index={indexPage}
@@ -94,6 +95,7 @@ return (
             {cabinetState}
             {teacherState}
         </SwipeableViews>
+        </Suspense>
         <CustomBottomNavigation mainPageContainer={{
             navigationValue: navigationValue,
             setNavigationValue: setNavigationValue,
