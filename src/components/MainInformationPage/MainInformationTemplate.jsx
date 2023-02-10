@@ -146,7 +146,7 @@ function MainInformationTemplate(props) {
                 console.log(err);
             })
         setTimeout(() => {
-            img.style = "opacity: 0; z-index: 1";
+            img.style = "opacity: 0; z-index: -1";
             itemsShedule = document.querySelectorAll(`#${props.target}Main .shedule > *:not(img)`);
             itemsShedule.forEach(element => {
                 element.style = "";

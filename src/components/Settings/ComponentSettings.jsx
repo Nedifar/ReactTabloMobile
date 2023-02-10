@@ -17,12 +17,23 @@ function ComponentSettings(props) {
         localStorage.setItem(`favorite${targetUp}Value`, e.target.value);
     }
 
+    const favoriteGroupContent = () => {
+        switch (props.content) {
+            case 'Группы':
+                return 'Избранная группа';
+            case 'Кабинеты':
+                return 'Избранный кабинет';
+            case 'Преподаватели':
+                return 'Избранный преподаватель';
+        }
+    }
+
     return (
         <div className={props.target + "Settings"}>
             <p>{props.content}</p>
             <div>
                 <div>
-                    <span>Избранная группа:</span>
+                    <span>{favoriteGroupContent()}:</span>
                 </div>
                 <div>
                     <Select variant="standard" value={props.selectedValue} onChange={handleSelectedChange} className={props.target + "SelectSet"}>
@@ -30,12 +41,12 @@ function ComponentSettings(props) {
                     </Select>
                 </div>
                 <div>
-                    <MyCheckBox 
-                    haveValue={props.selectedValue == "" || props.selectedValue == "Не выбрано" ? true : false} 
-                    setLocalStorage={handleSelectedChange} 
-                    onChange={props.setSelectedChecked} 
-                    checked={props.selectedChecked === "true"} 
-                    className="checkByRun" />
+                    <MyCheckBox
+                        haveValue={props.selectedValue == "" || props.selectedValue == "Не выбрано" ? true : false}
+                        setLocalStorage={handleSelectedChange}
+                        onChange={props.setSelectedChecked}
+                        checked={props.selectedChecked === "true"}
+                        className="checkByRun" />
                 </div>
             </div>
         </div>);
