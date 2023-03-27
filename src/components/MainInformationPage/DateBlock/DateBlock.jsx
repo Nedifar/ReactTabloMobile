@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import "./dateblock.css"
+import "./dateblock.scss"
 
 function DateBlock(props) {
     const locale = 'ru';
@@ -13,8 +13,8 @@ function DateBlock(props) {
                     <p>{props.dateFormat.downDay}</p>
                     <p>{props.dateFormat.getMonth(props.dateFormat.dDownDay)}</p>
                     <div>
-                        <div className="circle"></div>
-                        <div className="stripe"></div>
+                        <div className="circle-left"></div>
+                        <div className="stripe-left"></div>
                     </div>
                 </div>
             </div>

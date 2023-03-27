@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./maininforamtiontemplate.css"
+import "./maininforamtiontemplate.scss"
 import { IconButton } from "@mui/material";
 import { DoorBackOutlined, } from "@mui/icons-material";
 import { Settings } from "@mui/icons-material";

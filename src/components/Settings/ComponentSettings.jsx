@@ -29,14 +29,14 @@ function ComponentSettings(props) {
     }
 
     return (
-        <div className={props.target + "Settings"}>
+        <div className="universalSettingsSection">
             <p>{props.content}</p>
             <div>
                 <div>
                     <span>{favoriteGroupContent()}:</span>
                 </div>
-                <div>
-                    <Select variant="standard" value={props.selectedValue} onChange={handleSelectedChange} className={props.target + "SelectSet"}>
+                <div className={props.target + "SelectContainer"}>
+                    <Select variant="standard" value={props.selectedValue} onChange={handleSelectedChange} className='universalSelectSet'>
                         {props.listElems}
                     </Select>
                 </div>

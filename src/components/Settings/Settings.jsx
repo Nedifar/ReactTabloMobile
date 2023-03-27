@@ -3,7 +3,7 @@ import { IconButton, MenuItem } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ComponentSettings from "./ComponentSettings";
-import "./settings.css"
+import "./settings.scss"
 
 const url = process.env.REACT_APP_API_LOCAL || window.location.origin + '/infotabloserver';
 

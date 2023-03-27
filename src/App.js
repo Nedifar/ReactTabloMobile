@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import MainPageContainer from './components/MainPageContainer/MainPageContainer';
 import React from 'react';
 

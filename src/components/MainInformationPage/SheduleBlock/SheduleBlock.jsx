@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import ReloadCat from "../../../images/reloadcat.gif"
-import "./sheduleblock.css"
+import "./sheduleblock.scss"
 
 function SheduleBlock(props) {
 

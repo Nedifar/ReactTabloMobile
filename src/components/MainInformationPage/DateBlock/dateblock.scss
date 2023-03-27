@@ -1,0 +1,110 @@
+@mixin commonCircle() {
+    width: 10% !important;
+    height: 100% !important;
+    border-radius: 50%;
+    border-width: 1px;
+}
+
+@mixin commonStripe() {
+    width: 45% !important;
+    height: 10% !important;
+}
+
+.dateBlock {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &>div {
+        background-color: #00C6AE !important;
+
+        &:not(div:last-of-type) {
+            position: relative;
+            bottom: 55%;
+            height: 7.7vh;
+            width: 7.7vh;
+            min-height: 45px;
+            min-width: 45px;
+            align-self: center;
+            background-color: white;
+        }
+
+        &>div {
+            vertical-align: middle;
+            height: 100%;
+
+            &>div {
+                height: 10%;
+                width: 100%;
+                text-align: end;
+                display: flex;
+                justify-content: end;
+                align-items: center;
+                position: relative;
+
+                .circle-left {
+                    border: solid white;
+                    @include commonCircle();
+                }
+                
+                .circle-right {
+                
+                    border: solid #455399;
+                    @include commonCircle();
+                }
+                
+                .stripe-left {
+                    background-color: white !important;
+                    @include commonStripe();
+                }
+                
+                .stripe-right {
+                    background-color: #455399 !important;
+                    @include commonStripe();
+                }
+            }
+        }
+    }
+
+    p {
+        font-size: 3.5vh;
+        height: 60%;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        color: white;
+    }
+
+    p+p {
+        font-size: 1.3vh;
+        height: 25%;
+        display: block !important;
+        position: relative;
+    }
+
+    .rightDateContainer p {
+        color: #455399 !important;
+    }
+
+    .rightStripeContainer {
+        height: 10%;
+        width: 100%;
+        text-align: end;
+        display: flex;
+        justify-content: start !important;
+        align-items: center;
+    }
+
+    .rightDateContainer {
+        background-color: white !important;
+    }
+
+    .weekDate {
+        width: 15.4vh !important;
+        position: absolute !important;
+        height: 100%;
+        opacity: 0;
+        bottom: 55% !important;
+    }
+}

@@ -1,0 +1,140 @@
+@mixin inDayWeekContainer() {
+    display: grid;
+    grid-template-columns: 3px minmax(100px, 351px);
+    position: relative;
+    background-color: white;
+    width: 100%;
+
+    &>div:first-of-type {
+        background-color: blueviolet;
+        width: 3px;
+        height: 100%;
+    }
+
+    &>div+div {
+        display: grid;
+        grid-template-columns: 70fr 2fr 260fr;
+        height: 100%;
+    }
+}
+
+.shedule {
+    height: 100%;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    position: relative;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &>p {
+        margin-left: 5%;
+        font-size: 2.2vh;
+    }
+
+    .contLessonsBlock {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .buttonDayWeekContainer {
+            width: 100%;
+            max-width: 355px;
+            margin: 10px 20px;
+            z-index: 2;
+            position: relative;
+
+
+            .dayWeekContainer {
+                height: 60px;
+                border: 0 solid transparent;
+
+                @include inDayWeekContainer();
+
+                &>div:last-child {
+                    &>div:nth-child(1) {
+                        p {
+                            display: flex;
+                            justify-content: center;
+                            align-items: flex-end;
+                            width: 100%;
+                            height: 60%;
+                            font-size: 1.5rem;
+                        }
+
+                        span {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 100%;
+                            height: 30%;
+                            font-size: 0.7rem;
+                        }
+                    }
+
+                    &>div:nth-child(2) {
+                        background-color: #F3F5F9 !important;
+                    }
+
+                    &>div:nth-child(3) {
+                        display: flex;
+                        align-items: center;
+                        margin-left: 10%;
+                        font-size: 1rem;
+                    }
+                }
+            }
+
+            .dayWeekContent {
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+                max-height: 0;
+                margin-top: -1px;
+
+                @include inDayWeekContainer();
+
+                &>div:last-child {
+                    &>div:nth-child(2) {
+                        background-color: #F3F5F9 !important;
+                    }
+
+                    &>div:nth-child(3) {
+
+                        align-items: center;
+                        margin-left: 10%;
+                    }
+                }
+
+                .intoDayWeekContent {
+                    &>p:first-of-type {
+                        width: 100%;
+                        font-size: 0.6rem;
+                        margin-bottom: 0.9rem;
+                    }
+
+                    &>div {
+                        margin-bottom: 0.9rem;
+
+                        p {
+                            width: 100%;
+                            font-size: 0.8rem;
+                            min-height: 0.8rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .reloadCat {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        position: absolute;
+        top: 0;
+        opacity: 0;
+        background-color: #F3F5F9;
+    }
+}

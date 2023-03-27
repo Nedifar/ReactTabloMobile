@@ -1,7 +1,7 @@
 import { MenuItem, Select } from '@mui/material';
 import axios from 'axios';
 import React from 'react'
-import "./CustomSelect.css"
+import "./CustomSelect.scss"
 
 class CustomSelect extends React.Component { //props nameComponent
     constructor(props) {

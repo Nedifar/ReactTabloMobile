@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.MuiDialogActions-spacing {
+  color: #F4C7C7 !important;
+  background-color: #160B0B !important;
+  margin-top: -2px;
+}
+
+body {
+
+  .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
+    background-color: transparent !important;
+  }
+
+  &>div:nth-of-type(4) [role="presentation"] {
+    label {
+      color: #F4C7C7;
+
+      &+div {
+        border-bottom: 2px solid #F4C7C7;
+        color: #F4C7C7;
+      }
+    }
+
+    .MuiInputBase-formControl:after {
+      bottom: -2.1px;
+      left: -0.1px;
+      right: -0.1px;
+    }
+
+    input {
+      color: #F4C7C7;
+    }
+  }
+}

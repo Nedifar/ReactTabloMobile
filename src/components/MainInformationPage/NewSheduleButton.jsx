@@ -1,6 +1,7 @@
 import { NewReleases } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import dayjs from "dayjs";
+const iconStyle = { fontSize: 45 }
 
 function NewSheduleButton(props) {
 
@@ -8,8 +9,6 @@ function NewSheduleButton(props) {
         let newShedDate = dayjs(new Date().toDateString());
         props.handleDateChange(newShedDate.add(7, 'day'));
     }
-    const iconStyle = { fontSize: 45 }
-
 
     if (props.newShedule) {
         return (

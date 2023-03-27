@@ -1,0 +1,45 @@
+.main {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #F3F5F9;
+    grid-template-rows: 0.5fr 0.15fr 1.3fr;
+    display: grid;
+
+    .headerGrid {
+        background-color: #455399;
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        min-height: 140px;
+
+        .leftIconsBlock {
+            align-self: center;
+        }
+
+        .headerCenterBlock {
+            align-self: center;
+            text-align: center;
+
+            &>span {
+                font-weight: bold;
+                font-size: 200%;
+                color: white;
+                display: block;
+            }
+
+            &>div {
+                &>div:focus {
+                    background-color: transparent !important;
+                }
+            }
+        }
+
+        .rightItemsBlock {
+            margin-left: auto;
+
+            .settingsButton {
+                float: right;
+            }
+        }
+    }
+}

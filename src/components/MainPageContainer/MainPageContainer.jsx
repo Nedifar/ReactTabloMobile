@@ -1,7 +1,7 @@
 import { Slide } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect, Suspense } from "react";
-import "./mainpagecontainer.css"
+import "./mainpagecontainer.scss"
 import { useTheme } from "@emotion/react";
 import SwipeableViews from "react-swipeable-views";
 import UpSliderTransition from "../../lib/Transition";

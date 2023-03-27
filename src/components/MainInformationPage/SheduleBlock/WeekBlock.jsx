@@ -1,5 +1,4 @@
-import DateFormat from "../../../lib/DateFormat"
-import "./sheduleblock.css"
+import "./sheduleblock.scss"
 
 function WeekBlock(props) {
     return (
