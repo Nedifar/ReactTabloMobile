@@ -3,8 +3,16 @@ import axios from 'axios';
 import React from 'react'
 import "./CustomSelect.scss"
 
-class CustomSelect extends React.Component { //props nameComponent
-    constructor(props) {
+type CustomSelectProps = {
+    url:string
+}
+
+type CustomSelectParent = {
+    url:string
+}
+
+class CustomSelect extends React.Component, CustomSelectParent { //props nameComponent
+    constructor(props: CustomSelectProps) {
         super(props);
         this.state = {
             list: [""],

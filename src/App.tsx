@@ -5,7 +5,7 @@ import React from 'react';
 class App extends React.Component {
   render() {
 
-    const url = process.env.REACT_APP_API_LOCAL || window.location.origin + '/infotabloserver';
+    const url : string = process.env.REACT_APP_API_LOCAL || window.location.origin + '/infotabloserver';
 
     return (
       <div className='App'>
