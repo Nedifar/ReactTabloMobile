@@ -1,22 +1,23 @@
+import DateFormat from "../../../lib/DateFormat";
 import "./sheduleblock.scss"
 
-function WeekBlock(props) {
+function WeekBlock({dayWeek, dateFormat, counter}: WeekBlockProps) {
     return (
-        <div className="buttonDayWeekContainer" key={props.dayWeek.dayWeekName}>
+        <div className="buttonDayWeekContainer" key={dayWeek.dayWeekName}>
             <button type="button" onClick={handleOpenDayWeekContainer} className="dayWeekContainer">
                 <div>
 
                 </div>
                 <div>
                     <div>
-                        <p>{props.dateFormat.addDays(props.counter).getDate()}</p>
-                        <span>{props.dateFormat.getMonth(props.dateFormat.addDays(props.counter))}</span>
+                        <p>{dateFormat.addDays(counter).getDate()}</p>
+                        <span>{dateFormat.getMonth(dateFormat.addDays(counter))}</span>
                     </div>
                     <div>
 
                     </div>
                     <div>
-                        {props.dayWeek.dayWeekName}
+                        {dayWeek.dayWeekName}
                     </div>
                 </div>
             </button>
@@ -35,23 +36,23 @@ function WeekBlock(props) {
                         <p>
                             SHEDULE
                         </p>
-                        {getLessonBlock(props.dayWeek.dayWeekClasses)}
+                        {getLessonBlock(dayWeek.dayWeekClasses)}
                     </div>
                 </div>
             </div>
         </div>
     );
 
-    function handleOpenDayWeekContainer(e) {
-        var content = e.currentTarget.nextElementSibling;
+    function handleOpenDayWeekContainer(e: React.MouseEvent) {
+        const content : HTMLElement = e.currentTarget.nextElementSibling! as HTMLElement;
         if (content.style.maxHeight) {
-            content.style.maxHeight = null;
+            content.style.maxHeight = "";
         } else {
             content.style.maxHeight = content.scrollHeight + "px";
         }
     }
 
-    function getLessonBlock(lessons) {
+    function getLessonBlock(lessons : LessonBlockProps[]) {
         return lessons.map(element => {
             return(
                 <div key={element.Day + element.beginMobile}>
@@ -67,6 +68,23 @@ function WeekBlock(props) {
                 </div>);
         });
     }
+}
+
+type WeekBlockProps = {
+    dayWeek:{
+        dayWeekName:string,
+        dayWeekClasses : any
+    },
+    dateFormat: DateFormat,
+    counter: number
+}
+
+type LessonBlockProps = {
+    beginMobile : string,
+    endMobile : string,
+    number : number|null,
+    Day : string,
+    day: string
 }
 
 export default WeekBlock;

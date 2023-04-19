@@ -94,10 +94,6 @@ class DateFormat {
     getMonth(date: Date): string {
         return this.months[date.getMonth()];
     }
-
-    getDay(date : Date) {
-        let day : number = date.getDate()
-    }
 }
 
 export default DateFormat;

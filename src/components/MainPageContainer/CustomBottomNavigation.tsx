@@ -1,19 +1,18 @@
 import { GroupsOutlined, MeetingRoomOutlined, SchoolOutlined } from "@mui/icons-material";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 
-function CustomBottomNavigation(props) {
-    const mainPageContainer = props.mainPageContainer;
+function CustomBottomNavigation({mainPageContainer}:CustomBottomNavigationProps) {
 
     return(
     <BottomNavigation className="nav" value={mainPageContainer.navigationValue} onChange={(event, newValue) => {
         mainPageContainer.setNavigationValue(newValue);
-        if (newValue == "group") {
+        if (newValue === "group") {
             mainPageContainer.setIndexPage(0);
         }
-        else if (newValue == "cabinet") {
+        else if (newValue === "cabinet") {
             mainPageContainer.setIndexPage(1);
         }
-        else if (newValue == "teacher") {
+        else if (newValue === "teacher") {
             mainPageContainer.setIndexPage(2);
         }
     }}>
@@ -24,6 +23,14 @@ function CustomBottomNavigation(props) {
         <BottomNavigationAction label="Teacher" value="teacher" icon={<SchoolOutlined />}>
         </BottomNavigationAction>
     </BottomNavigation>);
+}
+
+type CustomBottomNavigationProps = {
+    mainPageContainer: {
+        navigationValue: string, 
+        setNavigationValue: React.Dispatch<React.SetStateAction<string>>,
+        setIndexPage: React.Dispatch<React.SetStateAction<number>>
+    }
 }
 
 export default CustomBottomNavigation;

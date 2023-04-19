@@ -1,14 +1,14 @@
 import { Alert, AlertTitle, Button, Dialog, DialogActions, TextField } from "@mui/material";
+import { DialogProps } from "../../../lib/CustomTypes";
+import React from "react";
 
-function EmptyCabinetDialog(props) {
-
-    const mainPageContainer = props.mainPageContainer;
+function EmptyCabinetDialog({ mainPageContainer, setCabinetSelectDialog, cabinetSelectDialog }: EmptyCabinetDialogProps) {
 
     const handleCloseCabinetSelectDialog = () => {
-        mainPageContainer.setCabinetSelectDialog({ open: false });
+        setCabinetSelectDialog({ open: false });
     }
 
-    const handleCabinetTextFieldChanged = (e) => {
+    const handleCabinetTextFieldChanged = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.value.length > 1) {
             e.target.value = e.target.value.slice(0, 1);
         }
@@ -16,18 +16,19 @@ function EmptyCabinetDialog(props) {
             e.target.value = e.target.value.slice(0, 0);
         }
     }
+
     return (
         <Dialog
             keepMounted
-            TransitionComponent={mainPageContainer.UpSliderTransition}
-            open={mainPageContainer.cabinetSelectDialog.open}
+            TransitionComponent={mainPageContainer.upSliderTransition}
+            open={cabinetSelectDialog?.open}
             onClose={handleCloseCabinetSelectDialog}
             className="error">
             <Alert severity="info" className="errorAlert" id="infoAlert">
                 <AlertTitle>
                     Информация
                 </AlertTitle>
-                <p>{mainPageContainer.cabinetSelectDialog.content}</p>
+                <p>{cabinetSelectDialog?.content}</p>
                 <TextField
                     autoFocus
                     label="Номер пары"
@@ -38,14 +39,33 @@ function EmptyCabinetDialog(props) {
                 />
             </Alert>
             <DialogActions>
-                <Button className="alertBtn" onClick={mainPageContainer.cabinetSelectDialog.ok}>
+                <Button className="alertBtn" onClick={cabinetSelectDialog?.ok}>
                     Ok
                 </Button>
-                <Button className="alertBtn" onClick={mainPageContainer.cabinetSelectDialog.cancel}>
+                <Button className="alertBtn" onClick={cabinetSelectDialog?.cancel}>
                     Отмена
                 </Button>
             </DialogActions>
         </Dialog>);
+}
+
+interface EmptyCabinetDialogProps extends DialogProps {
+    dialogState: {
+        open: boolean;
+        text?: string | undefined;
+    };
+    cabinetSelectDialog: {
+        open: boolean;
+        content?: string;
+        ok?: () => void;
+        cancel?: () => void;
+    };
+    setCabinetSelectDialog: React.Dispatch<React.SetStateAction<{
+        open: boolean;
+        content?: string;
+        ok?: () => void;
+        cancel?: () => void;
+    }>>
 }
 
 export default EmptyCabinetDialog;

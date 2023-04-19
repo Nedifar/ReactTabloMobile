@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-swipeable-views": "^0.13.1",
     "env-cmd": "^10.1.0",
     "sass": "^1.60.0"
   }
