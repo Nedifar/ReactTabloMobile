@@ -12,6 +12,7 @@ import SheduleBlock from "./SheduleBlock/SheduleBlock";
 import DateFormat from "../../lib/DateFormat";
 import DateBlock from "./DateBlock/DateBlock";
 import React, { useState } from "react";
+import { DayWeekType } from "../../lib/CustomTypes";
 
 function MainInformationTemplate({ url, emptyCabinetDialog, back, newShedule, infoDialog,
      handleDialogActions, handleErrorDialog, target}: MainInformationTemplateProps) {
@@ -20,19 +21,19 @@ function MainInformationTemplate({ url, emptyCabinetDialog, back, newShedule, in
     const [dateFormat, setDateFormat] = useState(new DateFormat(new Date()));
     const [oldDate, setOldDate] = useState(dayjs(new Date().toDateString()))
     const [resetGroup, setResetGroup] = useState(false);
-    const [spisok, setSpisok] = useState([]);
+    const [spisok, setSpisok] = useState<JSX.Element[]>([]);
     const iconStyle = { fontSize: 45 }
 
-    const handleGroupChange = (dayWeeks: any) => {
+    const handleGroupChange = (dayWeeks: DayWeekType[]) => {
         setSpisok(getWeekBlocks(dayWeeks));
     }
 
-    function getWeekBlocks(dayWeeks: any) {
+    function getWeekBlocks(dayWeeks: DayWeekType[]) : JSX.Element[] {
         if (dayWeeks.length === 0) {
             return [];
         }
         let counter: number = -1;
-        return dayWeeks.map((element: any) => {
+        return dayWeeks.map((element: DayWeekType) => {
             counter++;
             return <WeekBlock dayWeek={element} dateFormat={dateFormat} key={counter} counter={counter} />;
         })

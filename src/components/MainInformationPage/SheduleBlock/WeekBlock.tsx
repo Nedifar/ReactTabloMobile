@@ -1,7 +1,8 @@
+import { LessonBlockProps, WeekBlockProps } from "../../../lib/CustomTypes";
 import DateFormat from "../../../lib/DateFormat";
 import "./sheduleblock.scss"
 
-function WeekBlock({dayWeek, dateFormat, counter}: WeekBlockProps) {
+function WeekBlock({ dayWeek, dateFormat, counter }: WeekBlockProps) {
     return (
         <div className="buttonDayWeekContainer" key={dayWeek.dayWeekName}>
             <button type="button" onClick={handleOpenDayWeekContainer} className="dayWeekContainer">
@@ -44,7 +45,7 @@ function WeekBlock({dayWeek, dateFormat, counter}: WeekBlockProps) {
     );
 
     function handleOpenDayWeekContainer(e: React.MouseEvent) {
-        const content : HTMLElement = e.currentTarget.nextElementSibling! as HTMLElement;
+        const content: HTMLElement = e.currentTarget.nextElementSibling! as HTMLElement;
         if (content.style.maxHeight) {
             content.style.maxHeight = "";
         } else {
@@ -52,9 +53,9 @@ function WeekBlock({dayWeek, dateFormat, counter}: WeekBlockProps) {
         }
     }
 
-    function getLessonBlock(lessons : LessonBlockProps[]) {
+    function getLessonBlock(lessons: LessonBlockProps[]) {
         return lessons.map(element => {
-            return(
+            return (
                 <div key={element.Day + element.beginMobile}>
                     <p>
                         {element.number}
@@ -68,23 +69,6 @@ function WeekBlock({dayWeek, dateFormat, counter}: WeekBlockProps) {
                 </div>);
         });
     }
-}
-
-type WeekBlockProps = {
-    dayWeek:{
-        dayWeekName:string,
-        dayWeekClasses : any
-    },
-    dateFormat: DateFormat,
-    counter: number
-}
-
-type LessonBlockProps = {
-    beginMobile : string,
-    endMobile : string,
-    number : number|null,
-    Day : string,
-    day: string
 }
 
 export default WeekBlock;

@@ -34,7 +34,7 @@ function Settings({ backSettingsClick, dialogActions, setOOpen }: SettingsProps)
                 .then((response) => {
                     if (response.status === 200) {
                         listResult.push(<MenuItem value="Не выбрано" key="Не выбрано">Не выбрано</MenuItem>)
-                        response.data.forEach((elem: any) => {
+                        response.data.forEach((elem: string) => {
                             listResult.push(<MenuItem value={elem} key={elem}>{elem}</MenuItem>)
                         })
                         setCount(1);

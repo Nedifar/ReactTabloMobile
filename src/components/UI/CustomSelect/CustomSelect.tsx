@@ -2,12 +2,13 @@ import { MenuItem, Select } from '@mui/material';
 import axios from 'axios';
 import React from 'react'
 import "./CustomSelect.scss"
+import { DayWeekType } from '../../../lib/CustomTypes';
 
 type CustomSelectProps = {
     url: string,
     nameComponent: string,
     reset?: boolean,
-    handleSelectorChange: (arg1: string[]) => void,
+    handleSelectorChange: (arg1: DayWeekType[]) => void,
     dialogActions: React.Dispatch<React.SetStateAction<{
         ok: () => void;
         cancel: () => void;
@@ -67,7 +68,7 @@ class CustomSelect extends React.Component<CustomSelectProps, CustomSelectState>
                     this.props.handleSelectorChange([]);
                     console.log(response.data);
                     this.props.handleSelectorChange(response.data);
-                    this.setState({ selectValue: e.target.value, })
+                    this.setState({ selectValue: e.target, })
                 }
             }).catch(() => {
                 this.props.dialogActions({
@@ -112,7 +113,7 @@ class CustomSelect extends React.Component<CustomSelectProps, CustomSelectState>
 }
 
 function loadSelectData(nameComponent: string, select: CustomSelect) {
-    axios.get(select.url + `/api/lastdance/get${nameComponent}slist?date=${select.state.currentDate}`).then((response) => { //переделай запрос с getgrouplist на getgroupslist.
+    axios.get(select.url + `/api/lastdance/get${nameComponent}slist?date=${select.state.currentDate}`).then((response) => {
         if (response.status === 200) {
             let indexRemove = response.data.indexOf(select.favorite.value);
             if (select.favorite.value !== null && indexRemove !== -1) {
