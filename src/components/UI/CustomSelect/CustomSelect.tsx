@@ -68,7 +68,7 @@ class CustomSelect extends React.Component<CustomSelectProps, CustomSelectState>
                     this.props.handleSelectorChange([]);
                     console.log(response.data);
                     this.props.handleSelectorChange(response.data);
-                    this.setState({ selectValue: e.target, })
+                    this.setState({ selectValue: e.target.value, })
                 }
             }).catch(() => {
                 this.props.dialogActions({

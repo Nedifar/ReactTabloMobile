@@ -116,7 +116,7 @@ function MainInformationTemplate({ url, emptyCabinetDialog, back, newShedule, in
                 }
             }).catch(err => {
                 if (err.response.status === 404) {
-                    if (err.response.data == "Расписание для данной недели не найдено. Повторить поиск?") {
+                    if (err.response.data === "Расписание для данной недели не найдено. Повторить поиск?") {
                         handleDialogActions({
                             ok: () => {
                                 handleErrorDialog({ open: false });
@@ -129,7 +129,7 @@ function MainInformationTemplate({ url, emptyCabinetDialog, back, newShedule, in
                             }
                         });
                     }
-                    else if (err.response.data == "Расписания для данной группы не найдено. Повторить поиск?") {
+                    else if (err.response.data === "Расписания для данной группы не найдено. Повторить поиск?") {
                         handleDialogActions({
                             ok: () => {
                                 handleErrorDialog({ open: false });
@@ -167,7 +167,7 @@ function MainInformationTemplate({ url, emptyCabinetDialog, back, newShedule, in
                 </div>
                 <div className="headerCenterBlock">
                     <span>
-                        .NEDIFAR
+                        .OKSEI
                     </span>
                     <CustomSelcet
                         reset={resetGroup}

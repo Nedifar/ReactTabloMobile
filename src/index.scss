@@ -4,16 +4,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.MuiDialogActions-spacing {
-  color: #F4C7C7 !important;
-  background-color: #160B0B !important;
-  margin-top: -2px;
-}
+
 
 body {
+  div:nth-of-type(6){
+    .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
 
-  .css-1t1j96h-MuiPaper-root-MuiDialog-paper {
-    background-color: transparent !important;
+      //background-color: transparent !important;
+
+      .css-hlj6pa-MuiDialogActions-root {
+        background-color: #fff !important;
+        margin-top: -2px;
+      }
+    }
+  }
+
+
+  .MuiDialog-scrollPaper {
+
+    .MuiDialogActions-spacing {
+      color: #F4C7C7 !important;
+      background-color: #160B0B !important;
+      margin-top: -2px;
+    }
   }
 
   &>div:nth-of-type(4) [role="presentation"] {

@@ -8,7 +8,7 @@ function SheduleBlock({ target,spisok }: SheduleBlockProps) {
         let list = document.querySelectorAll(`#${target}Main p[data-type="Day"]`)
         list.forEach(element => {
             element.innerHTML = element.firstChild?.textContent!.replace('\n', '<br>')!;
-            if (element.innerHTML == "undefined") {
+            if (element.innerHTML === "undefined") {
                 element.innerHTML = "-";
             }
         });
@@ -31,11 +31,11 @@ function SheduleBlock({ target,spisok }: SheduleBlockProps) {
 
     return (
         <div className="shedule">
-            <p>LastDance</p>
+            <p>InfoTab</p>
             <div className="contLessonsBlock">
                 {spisok}
             </div>
-            <img className="reloadCat" src={ReloadCat}></img>
+            <img alt="catGif" className="reloadCat" src={ReloadCat}></img>
         </div>
     );
 }

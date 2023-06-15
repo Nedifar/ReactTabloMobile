@@ -1,5 +1,4 @@
 import { LessonBlockProps, WeekBlockProps } from "../../../lib/CustomTypes";
-import DateFormat from "../../../lib/DateFormat";
 import "./sheduleblock.scss"
 
 function WeekBlock({ dayWeek, dateFormat, counter }: WeekBlockProps) {

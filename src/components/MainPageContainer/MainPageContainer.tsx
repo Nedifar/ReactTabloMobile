@@ -73,7 +73,7 @@ function MainPageContainer({ url }: MainPageContainerProps) {
         }).catch((err) => {
             console.log(err);
         })
-    }, [newShedule])
+    }, [newShedule] ) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChangeIndex = (index: number) => {
         setNavigationValue(index === 0 ? "group" : (index === 1 ? "cabinet" : "teacher"));
